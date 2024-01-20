@@ -6,6 +6,7 @@
   padding: 15px;
   gap: 5px;
 }
+
 #FileManager div.directory-viewer button {
   display: flex;
   align-items: center;
@@ -14,6 +15,10 @@
   margin: 0;
   background-color: transparent;
   transform: unset;
+}
+
+#FileManager div.directory-viewer button.selected {
+  background-color: var(--accent-transparent) !important;
 }
 
 #FileManager div.directory-viewer button:hover {
@@ -60,4 +65,17 @@
   opacity: 1;
   padding: 0 5px;
   font-weight: 900;
+}
+
+#FileManager div.directory-viewer.compact {
+  gap: 2px;
+}
+
+#FileManager div.directory-viewer.compact button {
+  gap: 5px;
+}
+#FileManager div.directory-viewer.compact button div.segment.icon,
+#FileManager div.directory-viewer.compact button div.segment.icon img {
+  width: 16px;
+  height: 16px;
 }

@@ -6,7 +6,7 @@
 
   let path: string = "";
 
-  runtime.path.subscribe((v) => (path = pathToFriendlyPath(v)));
+  runtime.path.subscribe((v) => v && (path = pathToFriendlyPath(v)));
 </script>
 
 <div class="address-bar">
