@@ -12,7 +12,7 @@
 
   runtime.contents.subscribe(async (v) => {
     contents = null;
-    sleep(10);
+    sleep(0);
     contents = v;
   });
 </script>

@@ -1,0 +1,12 @@
+#FileManager div.directory-viewer.compact {
+  gap: 2px;
+}
+
+#FileManager div.directory-viewer.compact button {
+  gap: 5px;
+}
+#FileManager div.directory-viewer.compact button div.segment.icon,
+#FileManager div.directory-viewer.compact button div.segment.icon img {
+  width: 16px;
+  height: 16px;
+}

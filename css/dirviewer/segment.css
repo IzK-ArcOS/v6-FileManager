@@ -1,0 +1,28 @@
+#FileManager div.directory-viewer button div.segment {
+  text-align: left;
+}
+
+#FileManager div.directory-viewer button div.segment.name {
+  max-width: calc(100% - 24px - 200px - 30px);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#FileManager div.directory-viewer button div.segment.icon {
+  width: 24px;
+  height: 24px;
+}
+#FileManager div.directory-viewer button div.segment.icon img {
+  width: 24px;
+  height: 24px;
+}
+
+#FileManager div.directory-viewer button div.segment.type {
+  margin-left: auto;
+  width: 100px;
+}
+
+#FileManager div.directory-viewer button div.segment.modified {
+  width: 90px;
+}

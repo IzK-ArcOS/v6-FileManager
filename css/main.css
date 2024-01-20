@@ -1,6 +1,7 @@
 @import url("./sidebar.css");
 @import url("./content.css");
 @import url("./dirviewer.css");
+@import url("./toolbar.css");
 @import url("./addressbar.css");
 
 #FileManager div.body {

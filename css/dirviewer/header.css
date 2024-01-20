@@ -1,0 +1,7 @@
+#FileManager div.directory-viewer button.header-row {
+  box-shadow: none;
+  background-color: transparent;
+  opacity: 1;
+  padding: 0 5px;
+  font-weight: 900;
+}
