@@ -1,0 +1,63 @@
+#FileManager div.directory-viewer {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - var(--titlebar-height) - 40px - 50px);
+  overflow-y: scroll;
+  padding: 15px;
+  gap: 5px;
+}
+#FileManager div.directory-viewer button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+  margin: 0;
+  background-color: transparent;
+  transform: unset;
+}
+
+#FileManager div.directory-viewer button:hover {
+  background-color: var(--button-bg);
+}
+
+#FileManager div.directory-viewer button:active {
+  background-color: var(--button-active-bg);
+  box-shadow: none;
+}
+
+#FileManager div.directory-viewer button div.segment {
+  text-align: left;
+}
+
+#FileManager div.directory-viewer button div.segment.name {
+  max-width: calc(100% - 24px - 200px - 30px);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#FileManager div.directory-viewer button div.segment.icon {
+  width: 24px;
+  height: 24px;
+}
+#FileManager div.directory-viewer button div.segment.icon img {
+  width: 24px;
+  height: 24px;
+}
+
+#FileManager div.directory-viewer button div.segment.type {
+  margin-left: auto;
+  width: 100px;
+}
+
+#FileManager div.directory-viewer button div.segment.modified {
+  width: 90px;
+}
+
+#FileManager div.directory-viewer button.header-row {
+  box-shadow: none;
+  background-color: transparent;
+  opacity: 1;
+  padding: 0 5px;
+  font-weight: 900;
+}

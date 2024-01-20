@@ -1,3 +1,10 @@
-window#appTemplate { /* Rename appTemplate to the ID of the app */
-  color: #f0f;
+@import url("./sidebar.css");
+@import url("./content.css");
+@import url("./dirviewer.css");
+@import url("./addressbar.css");
+
+#FileManager div.body {
+  display: flex;
+  height: 100%;
+  padding: 0;
 }

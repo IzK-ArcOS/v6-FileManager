@@ -1,0 +1,6 @@
+#FileManager div.sidebar {
+  overflow-y: auto;
+  width: 200px;
+  height: 100%;
+  max-height: 100%;
+}

@@ -1,0 +1,45 @@
+#FileManager div.address-bar {
+  display: flex;
+  gap: 10px;
+  height: 30px;
+  margin: 5px 15px;
+  margin-bottom: 0;
+  align-items: center;
+}
+
+#FileManager div.address-bar div.portion.address {
+  flex-grow: 1;
+  max-width: calc(100% - 293px);
+}
+
+#FileManager div.address-bar div.path {
+  flex-grow: 1;
+  max-width: calc(100% - 35px);
+  background-color: var(--button-bg);
+  border-radius: 6px;
+  line-height: 30px;
+  padding: 0 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#FileManager div.address-bar button {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  margin: 0;
+  background-color: var(--button-bg);
+  font-size: 16px;
+}
+
+#FileManager div.address-bar div.portion {
+  display: flex;
+  gap: 5px;
+}
+
+#FileManager div.address-bar div.sep {
+  width: 1px;
+  height: 20px;
+  background-color: var(--button-hover-bg);
+}

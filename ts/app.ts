@@ -1,33 +1,34 @@
-import { DefaultIcon } from "$ts/images/apps";
-import { Runtime } from "./runtime";
-import AppSvelte from "../App.svelte";
+import { FileManagerIcon } from "$ts/images/apps";
 import { App } from "$types/app";
+import AppSvelte from "../App.svelte";
+import { Runtime } from "./runtime";
 
-export const app: App = {
+export const FileManager: App = {
   metadata: {
-    name: "App Template",
-    description: "This is an app template",
+    name: "File Manager",
+    description: "Manage your ArcFS files",
     author: "The ArcOS Team",
-    version: "0.0.0",
-    icon: DefaultIcon
+    version: "2.0.0",
+    icon: FileManagerIcon
   },
   runtime: Runtime,
   content: AppSvelte,
-  id: "appTemplate",
-  size: { w: 0, h: 0 },
-  minSize: { w: 0, h: 0 },
-  maxSize: { w: 0, h: 0 },
-  pos: { x: 0, y: 0 },
+  id: "FileManager",
+  size: { w: 800, h: 500 },
+  minSize: { w: 650, h: 400 },
+  maxSize: { w: 1400, h: 800 },
+  pos: { x: 120, y: 60 },
   state: {
     minimized: false,
     maximized: false,
-    headless: false,
+    headless: true,
     fullscreen: false,
-    resizable: false
+    resizable: true
   },
   controls: {
-    minimize: false,
-    maximize: false,
-    close: false
-  }
+    minimize: true,
+    maximize: true,
+    close: true,
+  },
+  glass: true
 }
