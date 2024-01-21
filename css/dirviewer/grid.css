@@ -1,0 +1,57 @@
+#FileManager div.directory-viewer.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 80px);
+  grid-template-rows: repeat(auto-fit, 85px);
+}
+#FileManager div.directory-viewer.grid button.header-row {
+  display: none;
+}
+
+#FileManager div.directory-viewer.grid button {
+  display: flex;
+  vertical-align: top;
+  flex-direction: column;
+  width: 80px !important;
+  height: fit-content;
+  margin: 0;
+  margin-bottom: 12px;
+  padding: 2px 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: transparent;
+}
+
+#FileManager div.directory-viewer.grid button div.segment.icon img {
+  width: 32px;
+  height: 32px;
+  margin: 0 8px;
+}
+
+#FileManager div.directory-viewer.grid button div.segment.icon {
+  width: unset;
+  height: 32px;
+}
+
+#FileManager
+  div.directory-viewer.grid
+  button
+  div.segment:not(.name):not(.icon) {
+  display: none;
+}
+
+#FileManager div.directory-viewer.grid button div.segment.name {
+  width: 100%;
+  text-align: center;
+  max-width: unset;
+  margin: 0;
+  height: fit-content;
+  max-height: 2.6em;
+  text-shadow: #000 0 0 5px;
+  color: white;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: initial;
+  overflow: hidden;
+  display: inline-block;
+  text-overflow: ellipsis;
+}

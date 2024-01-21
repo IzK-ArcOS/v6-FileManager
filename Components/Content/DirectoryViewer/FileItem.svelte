@@ -3,6 +3,7 @@
   import { formatBytes } from "$ts/bytes";
 
   import { FileIcon } from "$ts/images/filesystem";
+  import { getMimeIcon } from "$ts/server/fs/mime";
   import { RelativeTimeMod } from "$ts/stores/dayjs";
   import { sleep } from "$ts/util";
   import { PartialArcFile } from "$types/fs";
@@ -18,6 +19,7 @@
   let date = "";
   let selected = [];
   let mime = "";
+  let icon = "";
 
   onMount(() => {
     dayjs.extend(relativeTime);
@@ -29,6 +31,7 @@
     const m = fromMime(file.mime);
 
     mime = m.replace(m[0], m[0].toUpperCase());
+    icon = getMimeIcon(file.filename);
   });
 
   runtime.selected.subscribe((v) => (selected = v));
@@ -46,9 +49,9 @@
   class:selected={selected.includes(file.scopedPath)}
 >
   <div class="segment icon">
-    <img src={FileIcon} alt="" />
+    <img src={icon} alt="" />
   </div>
-  <div class="segment name">{file.filename}</div>
+  <div class="segment name" title={file.filename}>{file.filename}</div>
   <div class="segment type">{mime}</div>
   <div class="segment size">{formatBytes(file.size)}</div>
   <div class="segment modified">{date}</div>

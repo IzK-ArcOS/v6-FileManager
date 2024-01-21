@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Runtime } from "$apps/FileManager/ts/runtime";
+  import { UserDataStore } from "$ts/stores/user";
   import { sleep } from "$ts/util";
   import { UserDirectory } from "$types/fs";
   import Dropper from "./DirectoryViewer/Dropper.svelte";
@@ -44,6 +45,8 @@
   on:drop={drop}
   on:dragenter={() => (dropping = true)}
   on:dragleave={() => (dropping = false)}
+  class:grid={$UserDataStore.appdata.FileManager &&
+    $UserDataStore.appdata.FileManager.grid}
   class:dropping
 >
   <Header />
