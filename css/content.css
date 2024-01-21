@@ -5,4 +5,5 @@
   max-height: 100%;
   border-left: var(--win-border);
   background-color: var(--win-bg);
+  position: relative;
 }

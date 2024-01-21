@@ -20,8 +20,8 @@
 
 #FileManager div.directory-viewer button div.segment.type {
   margin-left: auto;
-  width: 60px;
-  min-width: 60px;
+  width: 80px;
+  min-width: 80px;
 }
 
 #FileManager div.directory-viewer button div.segment.size {

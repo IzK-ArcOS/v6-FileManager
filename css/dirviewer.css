@@ -4,6 +4,7 @@
 @import url("./dirviewer/compact.css");
 @import url("./dirviewer/empty.css");
 @import url("./dirviewer/center.css");
+@import url("./dirviewer/dropper.css");
 
 #FileManager div.directory-viewer {
   display: flex;
@@ -12,4 +13,8 @@
   overflow-y: scroll;
   padding: 15px;
   gap: 5px;
+}
+
+#FileManager div.directory-viewer.dropping {
+  overflow: hidden !important;
 }

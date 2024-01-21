@@ -2,6 +2,7 @@
   import { Runtime } from "$apps/FileManager/ts/runtime";
   import { sleep } from "$ts/util";
   import { UserDirectory } from "$types/fs";
+  import Dropper from "./DirectoryViewer/Dropper.svelte";
   import Failed from "./DirectoryViewer/Failed.svelte";
   import FileItem from "./DirectoryViewer/FileItem.svelte";
   import FolderItem from "./DirectoryViewer/FolderItem.svelte";
@@ -13,6 +14,7 @@
   let contents: UserDirectory;
   let loading = true;
   let failed = false;
+  let dropping = false;
 
   runtime.failed.subscribe((v) => (failed = v));
   runtime.loading.subscribe((v) => (loading = v));
@@ -24,7 +26,14 @@
   });
 
   function dragOver(e: DragEvent) {
+    dropping = true;
     e.preventDefault(); // Stop browser from handling the file(s)
+  }
+
+  function drop(e: DragEvent) {
+    runtime.dropFiles(e);
+
+    dropping = false;
   }
 </script>
 
@@ -32,7 +41,10 @@
   class="directory-viewer"
   role="directory"
   on:dragover={dragOver}
-  on:drop={(e) => runtime.dropFiles(e)}
+  on:drop={drop}
+  on:dragenter={() => (dropping = true)}
+  on:dragleave={() => (dropping = false)}
+  class:dropping
 >
   <Header />
   {#if contents}
@@ -56,3 +68,7 @@
     <Loading />
   {/if}
 </div>
+
+{#if dropping}
+  <Dropper />
+{/if}
