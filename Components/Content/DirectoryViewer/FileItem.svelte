@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Runtime } from "$apps/FileManager/ts/runtime";
+  import { formatBytes } from "$ts/bytes";
 
   import { FileIcon } from "$ts/images/filesystem";
   import { RelativeTimeMod } from "$ts/stores/dayjs";
@@ -49,5 +50,6 @@
   </div>
   <div class="segment name">{file.filename}</div>
   <div class="segment type">{mime}</div>
+  <div class="segment size">{formatBytes(file.size)}</div>
   <div class="segment modified">{date}</div>
 </button>

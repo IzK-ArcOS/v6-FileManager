@@ -1,7 +1,11 @@
-import { deleteItem } from "$ts/server/fs/delete";
 import { AppKeyCombinations } from "$types/accelerator";
 import { Runtime } from "./runtime";
 
+/**
+ * Gets the keyboard accelerators for the File Manager
+ * @param runtime The File Manager Runtime
+ * @returns File Manager key combinations
+ */
 export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
   return [
     {

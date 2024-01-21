@@ -33,5 +33,6 @@
   </div>
   <div class="segment name">{dir.name}</div>
   <div class="segment type">Folder</div>
+  <div class="segment size">-</div>
   <div class="segment modified">-</div>
 </button>

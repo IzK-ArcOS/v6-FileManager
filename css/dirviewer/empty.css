@@ -1,0 +1,6 @@
+#FileManager div.directory-viewer p.empty {
+  text-align: center;
+  margin: 10px;
+  opacity: 0.5;
+  font-style: italic;
+}

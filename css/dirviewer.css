@@ -2,6 +2,8 @@
 @import url("./dirviewer/item.css");
 @import url("./dirviewer/header.css");
 @import url("./dirviewer/compact.css");
+@import url("./dirviewer/empty.css");
+@import url("./dirviewer/center.css");
 
 #FileManager div.directory-viewer {
   display: flex;

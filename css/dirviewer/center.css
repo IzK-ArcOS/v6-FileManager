@@ -1,0 +1,6 @@
+#FileManager div.directory-viewer div.center-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

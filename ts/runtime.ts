@@ -4,8 +4,9 @@ import { TrashIcon } from "$ts/images/general";
 import { Process } from "$ts/process";
 import { GlobalDispatch } from "$ts/process/dispatch/global";
 import { GetConfirmation, createErrorDialog } from "$ts/process/error";
-import { deleteItem } from "$ts/server/fs/delete";
+import { deleteItem, deleteMultiple } from "$ts/server/fs/delete";
 import { createDirectory, getParentDirectory, readDirectory } from "$ts/server/fs/dir";
+import { fileUpload, multipleFileUpload } from "$ts/server/fs/upload";
 import { pathToFriendlyName } from "$ts/server/fs/util";
 import { Plural } from "$ts/util";
 import { Store } from "$ts/writable";
@@ -18,41 +19,61 @@ export class Runtime extends AppRuntime {
   public path = Store<string>();
   public contents = Store<UserDirectory>();
   public selected = Store<string[]>([]);
-  private refreshLocked = false;
+  public loading = Store<boolean>(true);
+  public failed = Store<boolean>(false);
+  private _refreshLocked = false;
 
   constructor(app: App, mutator: AppMutator, process: Process) {
     super(app, mutator, process);
 
-    const args = process.args;
+    this._init();
+  }
+
+  /**
+   * Initializes the rest of the Runtime and its listeners
+   */
+  private async _init() {
+    const args = this.process.args;
     const path = args[0] && typeof args[0] == "string" ? args[0] : "./";
 
     this.process.accelerator.store.push(...FileManagerAccelerators(this))
-    this.navigate(path);
+    await this.navigate(path);
     this.assignDispatchers();
     this.createSystemFolders();
   }
 
+  /**
+   * Navigates the current instance to the provided path
+   * @param path The full path to navigate to
+   */
   public async navigate(path: string) {
     this.path.set(path);
-    this.refresh();
+
+    await this.refresh();
+
     this.appMutator.update((v) => {
       v.metadata.name = `File Manager - ${pathToFriendlyName(path)}`;
 
       return v;
     })
-
-    return true;
   }
 
+  /**
+   * Refreshes the directory contents by getting them from the filesystem
+   */
   public async refresh() {
-    if (this.refreshLocked) return;
+    if (this._refreshLocked) return;
 
-    this.contents.set(null);
+    this.contents.set(undefined);
+    this.loading.set(true);
+    this.failed.set(false);
 
     const contents = await readDirectory(this.path.get());
 
+    this.loading.set(false);
+
     if (!contents) {
-      this.FileNotFoundError();
+      this.FileNotFound();
 
       return false;
     }
@@ -63,10 +84,17 @@ export class Runtime extends AppRuntime {
     return true;
   }
 
+  /**
+   * Contacts the ArcOS File APIs to open the file with another process or handler.
+   * @param file The file to open
+   */
   public async openFile(file: PartialArcFile) {
     console.log(file);//TODO
   }
 
+  /**
+   * Navigates to the parent directory.
+   */
   public async parentDir() {
     const current = this.path.get();
     const parent = getParentDirectory(current);
@@ -76,6 +104,11 @@ export class Runtime extends AppRuntime {
     return await this.navigate(parent);
   }
 
+  /**
+   * Replaces- or appends to the selection, or unselects an already selected item.
+   * @param e The mouse event of the click
+   * @param path The full path of the item to be selected
+   */
   public updateSelection(e: MouseEvent, path: string) {
     if (!e.shiftKey) return this.selected.set([path]);
 
@@ -89,7 +122,14 @@ export class Runtime extends AppRuntime {
     return;
   }
 
-  public FileNotFoundError(path = this.path.get()) {
+  /**
+   * Displays the Path Not Found dialog when a missing path is dispatched.
+   * @param path The directory that's missing
+   */
+
+  public FileNotFound(path = this.path.get()) {
+    this.failed.set(true);
+
     createErrorDialog({
       title: "Location not found",
       message: `Folder <code>${path}</code> does not exist on ArcFS.`,
@@ -102,6 +142,9 @@ export class Runtime extends AppRuntime {
     }, this.pid, true)
   }
 
+  /**
+   * Selects all files in the current directory (Ctrl+A).
+   */
   public selectAll() {
     const contents = this.contents.get();
 
@@ -113,6 +156,26 @@ export class Runtime extends AppRuntime {
     ])
   }
 
+  /**
+   * Prevents the File Manager from listening to `fs-flush`
+   */
+  public lockRefresh() {
+    this._refreshLocked = true;
+  }
+
+  /**
+   * Allows the File Manager to listen to `fs-flush` again
+   * @param refresh Refresh the directory content also?
+   */
+  public unlockRefresh(refresh = true) {
+    this._refreshLocked = false;
+
+    if (refresh) this.refresh();
+  }
+
+  /**
+   * Handles deleting the selected files (Delete key)
+   */
   public async deleteSelected() {
     const selected = this.selected.get();
 
@@ -129,14 +192,35 @@ export class Runtime extends AppRuntime {
     if (!proceed) return;
 
     //TODO: Add some kind of progress indicator here
+    this.lockRefresh();
 
-    for (const path of selected) {
-      await deleteItem(path);
-    }
+    await deleteMultiple(selected);
 
+    this.unlockRefresh();
     //TODO: Stop that progress indicator here
   }
 
+  /**
+   * Handles dropping files onto the DirectoryViewer component
+   * @param e The drag event
+   */
+  public async dropFiles(e: DragEvent) {
+    e.preventDefault();
+
+    this.lockRefresh();
+    //TODO: Add some kind of progress indicator here
+
+    const target = this.path.get();
+
+    await multipleFileUpload(e.dataTransfer.files, target)
+
+    this.unlockRefresh();
+    //TODO: Stop that progress indicator here
+  }
+
+  /**
+   * Assigns subscriptions for filesystem flushing and change-dir
+   */
   private assignDispatchers() {
     GlobalDispatch.subscribe("fs-flush", () => this.refresh());
 
@@ -145,15 +229,28 @@ export class Runtime extends AppRuntime {
     })
   }
 
+  /**
+   * Creates the predefined directories if they don't exist.
+   */
   private async createSystemFolders() {
-    this.refreshLocked = true;
+    this.lockRefresh();
+
+    const contents = this.contents.get();
+
+    let createdAnything = false;
+
+    if (!contents) throw new Error("TODO");
+
+    const rootDirs = contents.directories.map((a) => `./${a.scopedPath}`);
 
     for (const { path } of SystemFolders) {
-      await createDirectory(path)
+      if (rootDirs.includes(path)) continue;
+
+      await createDirectory(path);
+
+      createdAnything = true;
     }
 
-    this.refreshLocked = false;
-
-    this.refresh();
+    this.unlockRefresh(createdAnything);
   }
 }
