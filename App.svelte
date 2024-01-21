@@ -7,5 +7,5 @@
   export let runtime: Runtime;
 </script>
 
-<SideBar />
+<SideBar {runtime} />
 <Content {runtime} />

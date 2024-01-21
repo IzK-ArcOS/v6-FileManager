@@ -1,21 +1,20 @@
-import { FileIcon } from "$ts/images/filesystem";
-import { DesktopIcon, ThemesIcon } from "$ts/images/general";
+import { DocumentsFolderIcon, ThemeFolderIcon, WallpapersFolderIcon } from "$ts/images/filesystem";
 import { SystemFolder } from "./types";
 
 export const SystemFolders: SystemFolder[] = [
   {
     name: "Documents",
     path: "./Documents",
-    icon: FileIcon,
+    icon: DocumentsFolderIcon,
   },
   {
     name: "Themes",
     path: "./Themes",
-    icon: ThemesIcon,
+    icon: ThemeFolderIcon,
   },
   {
     name: "Wallpapers",
     path: "./Wallpapers",
-    icon: DesktopIcon,
+    icon: WallpapersFolderIcon,
   }
 ]
