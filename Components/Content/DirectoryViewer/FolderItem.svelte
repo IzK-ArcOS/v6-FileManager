@@ -6,14 +6,11 @@
 
   export let runtime: Runtime;
   export let dir: PartialUserDir;
-
-  let selected = [];
+  export let selected: string[];
 
   function goHere() {
     runtime.navigate(dir.scopedPath);
   }
-
-  runtime.selected.subscribe((v) => (selected = v));
 
   async function select(e: MouseEvent) {
     await sleep(0);

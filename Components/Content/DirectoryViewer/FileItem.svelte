@@ -1,8 +1,6 @@
 <script lang="ts">
   import { Runtime } from "$apps/FileManager/ts/runtime";
   import { formatBytes } from "$ts/bytes";
-
-  import { FileIcon } from "$ts/images/filesystem";
   import { getMimeIcon } from "$ts/server/fs/mime";
   import { RelativeTimeMod } from "$ts/stores/dayjs";
   import { sleep } from "$ts/util";
@@ -15,9 +13,9 @@
 
   export let runtime: Runtime;
   export let file: PartialArcFile;
+  export let selected: string[];
 
   let date = "";
-  let selected = [];
   let mime = "";
   let icon = "";
 
@@ -33,8 +31,6 @@
     mime = m.replace(m[0], m[0].toUpperCase());
     icon = getMimeIcon(file.filename);
   });
-
-  runtime.selected.subscribe((v) => (selected = v));
 
   async function select(e: MouseEvent) {
     await sleep(0);

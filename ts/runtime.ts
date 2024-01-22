@@ -4,9 +4,10 @@ import { TrashIcon } from "$ts/images/general";
 import { Process } from "$ts/process";
 import { GlobalDispatch } from "$ts/process/dispatch/global";
 import { GetConfirmation, createErrorDialog } from "$ts/process/error";
-import { deleteItem, deleteMultiple } from "$ts/server/fs/delete";
+import { copyItem, copyMultiple } from "$ts/server/fs/copy";
+import { deleteMultiple } from "$ts/server/fs/delete";
 import { createDirectory, getParentDirectory, readDirectory } from "$ts/server/fs/dir";
-import { fileUpload, multipleFileUpload } from "$ts/server/fs/upload";
+import { multipleFileUpload } from "$ts/server/fs/upload";
 import { pathToFriendlyName } from "$ts/server/fs/util";
 import { Plural } from "$ts/util";
 import { Store } from "$ts/writable";
@@ -19,6 +20,8 @@ export class Runtime extends AppRuntime {
   public path = Store<string>();
   public contents = Store<UserDirectory>();
   public selected = Store<string[]>([]);
+  public cutList = Store<string[]>([]);
+  public copyList = Store<string[]>([]);
   public loading = Store<boolean>(true);
   public failed = Store<boolean>(false);
   private _refreshLocked = false;
@@ -29,9 +32,6 @@ export class Runtime extends AppRuntime {
     this._init();
   }
 
-  /**
-   * Initializes the rest of the Runtime and its listeners
-   */
   private async _init() {
     const args = this.process.args;
     const path = args[0] && typeof args[0] == "string" ? args[0] : "./";
@@ -42,25 +42,14 @@ export class Runtime extends AppRuntime {
     this.createSystemFolders();
   }
 
-  /**
-   * Navigates the current instance to the provided path
-   * @param path The full path to navigate to
-   */
   public async navigate(path: string) {
     this.path.set(path);
 
     await this.refresh();
 
-    this.appMutator.update((v) => {
-      v.metadata.name = `File Manager - ${pathToFriendlyName(path)}`;
-
-      return v;
-    })
+    this.setWindowTitle(pathToFriendlyName(path), true)
   }
 
-  /**
-   * Refreshes the directory contents by getting them from the filesystem
-   */
   public async refresh() {
     if (this._refreshLocked) return;
 
@@ -84,17 +73,10 @@ export class Runtime extends AppRuntime {
     return true;
   }
 
-  /**
-   * Contacts the ArcOS File APIs to open the file with another process or handler.
-   * @param file The file to open
-   */
   public async openFile(file: PartialArcFile) {
     console.log(file);//TODO
   }
 
-  /**
-   * Navigates to the parent directory.
-   */
   public async parentDir() {
     const current = this.path.get();
     const parent = getParentDirectory(current);
@@ -104,11 +86,6 @@ export class Runtime extends AppRuntime {
     return await this.navigate(parent);
   }
 
-  /**
-   * Replaces- or appends to the selection, or unselects an already selected item.
-   * @param e The mouse event of the click
-   * @param path The full path of the item to be selected
-   */
   public updateSelection(e: MouseEvent, path: string) {
     if (!e.shiftKey) return this.selected.set([path]);
 
@@ -121,11 +98,6 @@ export class Runtime extends AppRuntime {
 
     return;
   }
-
-  /**
-   * Displays the Path Not Found dialog when a missing path is dispatched.
-   * @param path The directory that's missing
-   */
 
   public FileNotFound(path = this.path.get()) {
     this.failed.set(true);
@@ -142,9 +114,6 @@ export class Runtime extends AppRuntime {
     }, this.pid, true)
   }
 
-  /**
-   * Selects all files in the current directory (Ctrl+A).
-   */
   public selectAll() {
     const contents = this.contents.get();
 
@@ -156,26 +125,16 @@ export class Runtime extends AppRuntime {
     ])
   }
 
-  /**
-   * Prevents the File Manager from listening to `fs-flush`
-   */
   public lockRefresh() {
     this._refreshLocked = true;
   }
 
-  /**
-   * Allows the File Manager to listen to `fs-flush` again
-   * @param refresh Refresh the directory content also?
-   */
   public unlockRefresh(refresh = true) {
     this._refreshLocked = false;
 
     if (refresh) this.refresh();
   }
 
-  /**
-   * Handles deleting the selected files (Delete key)
-   */
   public async deleteSelected() {
     const selected = this.selected.get();
 
@@ -200,10 +159,6 @@ export class Runtime extends AppRuntime {
     //TODO: Stop that progress indicator here
   }
 
-  /**
-   * Handles dropping files onto the DirectoryViewer component
-   * @param e The drag event
-   */
   public async dropFiles(e: DragEvent) {
     e.preventDefault();
 
@@ -218,9 +173,6 @@ export class Runtime extends AppRuntime {
     //TODO: Stop that progress indicator here
   }
 
-  /**
-   * Assigns subscriptions for filesystem flushing and change-dir
-   */
   private assignDispatchers() {
     GlobalDispatch.subscribe("fs-flush", () => this.refresh());
 
@@ -229,9 +181,6 @@ export class Runtime extends AppRuntime {
     })
   }
 
-  /**
-   * Creates the predefined directories if they don't exist.
-   */
   private async createSystemFolders() {
     this.lockRefresh();
 
@@ -252,5 +201,25 @@ export class Runtime extends AppRuntime {
     }
 
     this.unlockRefresh(createdAnything);
+  }
+
+  public setCopyFiles(files = this.selected.get()) {
+    this.copyList.set(files);
+    this.cutList.set([]);
+  }
+
+  public setCutFiles(files = this.selected.get()) {
+    this.cutList.set(files);
+    this.copyList.set([]);
+  }
+
+  public async copyFiles(files = this.copyList.get(), target = this.path.get()) {
+    const obj = {};
+
+    for (const path of files) {
+      obj[path] = target;
+    }
+
+    return await copyMultiple(obj);
   }
 }

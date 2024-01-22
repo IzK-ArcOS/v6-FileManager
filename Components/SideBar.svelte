@@ -6,15 +6,13 @@
 
   export let runtime: Runtime;
 
-  let current = "";
-
-  runtime.path.subscribe((v) => (current = v));
+  const { path } = runtime;
 </script>
 
 <div class="sidebar">
   <div class="folders">
     {#each SystemFolders as folder}
-      <Folder {folder} {runtime} {current} />
+      <Folder {folder} {runtime} current={$path} />
     {/each}
   </div>
   <Quota />
