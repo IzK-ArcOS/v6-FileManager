@@ -3,4 +3,5 @@
   margin: 10px;
   opacity: 0.5;
   font-style: italic;
+  transition: color 0.3s !important;
 }

@@ -33,8 +33,7 @@
   on:drop={drop}
   on:dragenter={() => (dropping = true)}
   on:dragleave={() => (dropping = false)}
-  class:grid={$UserDataStore.appdata.FileManager &&
-    $UserDataStore.appdata.FileManager.grid}
+  class:grid={$UserDataStore.appdata.FileManager.grid}
   class:dropping
 >
   <Header />

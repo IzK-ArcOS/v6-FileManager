@@ -4,7 +4,7 @@ import { TrashIcon } from "$ts/images/general";
 import { Process } from "$ts/process";
 import { GlobalDispatch } from "$ts/process/dispatch/global";
 import { GetConfirmation, createErrorDialog } from "$ts/process/error";
-import { copyMultiple } from "$ts/server/fs/copy";
+import { copyMultiple, renameMultiple } from "$ts/server/fs/copy";
 import { deleteMultiple } from "$ts/server/fs/delete";
 import { createDirectory, getParentDirectory, readDirectory } from "$ts/server/fs/dir";
 import { multipleFileUpload } from "$ts/server/fs/upload";
@@ -182,13 +182,15 @@ export class Runtime extends AppRuntime {
   }
 
   private async createSystemFolders() {
-    this.lockRefresh();
-
     const contents = this.contents.get();
 
-    let createdAnything = false;
-
     if (!contents) throw new Error("TODO");
+
+    if (contents.scopedPath != "./") return;
+
+    this.lockRefresh();
+
+    let createdAnything = false;
 
     const rootDirs = contents.directories.map((a) => `./${a.scopedPath}`);
 
@@ -213,13 +215,40 @@ export class Runtime extends AppRuntime {
     this.copyList.set([]);
   }
 
-  public async copyFiles(files = this.copyList.get(), target = this.path.get()) {
+  public async pasteFiles(target = this.path.get()) {
+    const copyList = this.copyList.get();
+    const cutList = this.cutList.get();
+    const copyObj = {};
+    const cutObj = {};
+
+    if (!copyList.length && !cutList.length) return;
+
+    this.lockRefresh();
+
+    for (const path of copyList) {
+      copyObj[path] = target;
+    }
+
+    for (const path of cutList) {
+      cutObj[path] = target;
+    }
+
+    await renameMultiple(cutObj);
+    await copyMultiple(copyObj);
+
+    this.copyList.set([]);
+    this.cutList.set([]);
+
+    this.unlockRefresh();
+  }
+
+  public async moveFiles(files = this.cutList.get(), target = this.path.get()) {
     const obj = {};
 
     for (const path of files) {
       obj[path] = target;
     }
 
-    return await copyMultiple(obj);
+    return await renameMultiple(obj);
   }
 }

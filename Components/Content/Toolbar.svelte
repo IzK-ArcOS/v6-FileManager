@@ -20,23 +20,14 @@
   });
 
   UserDataStore.subscribe((v) => {
-    grid = !!(
-      $UserDataStore.appdata.FileManager &&
-      $UserDataStore.appdata.FileManager.grid
-    );
+    grid = !!$UserDataStore.appdata.FileManager.grid;
   });
 
   function gridOff() {
-    if (!$UserDataStore.appdata.FileManager)
-      $UserDataStore.appdata.FileManager = {};
-
     $UserDataStore.appdata.FileManager.grid = false;
   }
 
   function gridOn() {
-    if (!$UserDataStore.appdata.FileManager)
-      $UserDataStore.appdata.FileManager = {};
-
     $UserDataStore.appdata.FileManager.grid = true;
   }
 </script>

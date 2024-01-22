@@ -5,7 +5,7 @@
   position: relative;
 }
 
-#FileManager div.directory-viewer p.empty,
+#FileManager div.directory-viewer.grid p.empty,
 #FileManager div.directory-viewer.grid div.center-flex {
   position: absolute;
   top: 0;

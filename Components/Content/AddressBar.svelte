@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Runtime } from "$apps/FileManager/ts/runtime";
   import { pathToFriendlyPath } from "$ts/server/fs/util";
+  import CopyPaste from "./AddressBar/CopyPaste.svelte";
 
   export let runtime: Runtime;
 
@@ -18,11 +19,7 @@
     <div class="path">{pathToFriendlyPath($path)}</div>
   </div>
   <div class="sep" />
-  <div class="portion">
-    <button class="material-icons-round">content_cut</button>
-    <button class="material-icons-round">content_copy</button>
-    <button class="material-icons-round">content_paste</button>
-  </div>
+  <CopyPaste {runtime} />
   <div class="sep" />
   <div class="portion">
     <button class="material-icons-round">create_new_folder</button>
