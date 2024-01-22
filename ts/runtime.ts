@@ -4,7 +4,7 @@ import { TrashIcon } from "$ts/images/general";
 import { Process } from "$ts/process";
 import { GlobalDispatch } from "$ts/process/dispatch/global";
 import { GetConfirmation, createErrorDialog } from "$ts/process/error";
-import { copyItem, copyMultiple } from "$ts/server/fs/copy";
+import { copyMultiple } from "$ts/server/fs/copy";
 import { deleteMultiple } from "$ts/server/fs/delete";
 import { createDirectory, getParentDirectory, readDirectory } from "$ts/server/fs/dir";
 import { multipleFileUpload } from "$ts/server/fs/upload";
