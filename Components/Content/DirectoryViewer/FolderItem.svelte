@@ -8,6 +8,8 @@
   export let dir: PartialUserDir;
   export let selected: string[];
 
+  const { cutList, copyList } = runtime;
+
   function goHere() {
     runtime.navigate(dir.scopedPath);
   }
@@ -22,6 +24,8 @@
 <button
   class="item folder"
   on:click={select}
+  class:cutting={$cutList.includes(dir.scopedPath)}
+  class:copying={$copyList.includes(dir.scopedPath)}
   class:selected={selected.includes(dir.scopedPath)}
   on:dblclick={goHere}
 >

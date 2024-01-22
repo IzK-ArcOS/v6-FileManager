@@ -241,14 +241,4 @@ export class Runtime extends AppRuntime {
 
     this.unlockRefresh();
   }
-
-  public async moveFiles(files = this.cutList.get(), target = this.path.get()) {
-    const obj = {};
-
-    for (const path of files) {
-      obj[path] = target;
-    }
-
-    return await renameMultiple(obj);
-  }
 }

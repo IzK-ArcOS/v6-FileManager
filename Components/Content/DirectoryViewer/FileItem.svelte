@@ -15,6 +15,8 @@
   export let file: PartialArcFile;
   export let selected: string[];
 
+  const { cutList, copyList } = runtime;
+
   let date = "";
   let mime = "";
   let icon = "";
@@ -42,6 +44,8 @@
 <button
   class="item file"
   on:click={select}
+  class:cutting={$cutList.includes(file.scopedPath)}
+  class:copying={$copyList.includes(file.scopedPath)}
   class:selected={selected.includes(file.scopedPath)}
 >
   <div class="segment icon">

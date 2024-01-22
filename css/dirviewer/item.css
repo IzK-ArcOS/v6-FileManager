@@ -13,6 +13,14 @@
   background-color: var(--accent-transparent) !important;
 }
 
+#FileManager div.directory-viewer button.cutting {
+  opacity: 0.5;
+}
+
+#FileManager div.directory-viewer button.copying {
+  background-color: var(--button-glass-bg) !important;
+}
+
 #FileManager div.directory-viewer button:hover {
   background-color: var(--button-bg);
 }
