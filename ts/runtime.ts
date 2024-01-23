@@ -5,9 +5,12 @@ import { Process } from "$ts/process";
 import { GlobalDispatch } from "$ts/process/dispatch/global";
 import { GetConfirmation, createErrorDialog } from "$ts/process/error";
 import { copyMultiple, renameMultiple } from "$ts/server/fs/copy";
+import { copyMultipleProgressy, renameMultipleProgressy } from "$ts/server/fs/copy/progress";
 import { deleteMultiple } from "$ts/server/fs/delete";
+import { deleteMultipleProgressy } from "$ts/server/fs/delete/progress";
 import { createDirectory, getParentDirectory, readDirectory } from "$ts/server/fs/dir";
 import { multipleFileUpload } from "$ts/server/fs/upload";
+import { multipleFileUploadProgressy } from "$ts/server/fs/upload/progress";
 import { pathToFriendlyName } from "$ts/server/fs/util";
 import { Plural } from "$ts/util";
 import { Store } from "$ts/writable";
@@ -153,7 +156,7 @@ export class Runtime extends AppRuntime {
     //TODO: Add some kind of progress indicator here
     this.lockRefresh();
 
-    await deleteMultiple(selected);
+    await deleteMultipleProgressy(selected);
 
     this.unlockRefresh();
     //TODO: Stop that progress indicator here
@@ -167,7 +170,7 @@ export class Runtime extends AppRuntime {
 
     const target = this.path.get();
 
-    await multipleFileUpload(e.dataTransfer.files, target)
+    await multipleFileUploadProgressy(e.dataTransfer.files, target)
 
     this.unlockRefresh();
     //TODO: Stop that progress indicator here
@@ -233,8 +236,8 @@ export class Runtime extends AppRuntime {
       cutObj[path] = target;
     }
 
-    await renameMultiple(cutObj);
-    await copyMultiple(copyObj);
+    await renameMultipleProgressy(cutObj);
+    await copyMultipleProgressy(copyObj);
 
     this.copyList.set([]);
     this.cutList.set([]);

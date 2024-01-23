@@ -18,7 +18,7 @@
 }
 
 #FileManager div.directory-viewer button.copying {
-  background-color: var(--button-glass-bg) !important;
+  font-weight: bold;
 }
 
 #FileManager div.directory-viewer button:hover {

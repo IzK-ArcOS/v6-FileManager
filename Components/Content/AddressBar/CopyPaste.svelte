@@ -23,6 +23,8 @@
     class="material-icons-round"
     on:click={cut}
     disabled={!$selected.length}
+    class:suggested={$cutList.length}
+    title="Cut items"
   >
     content_cut
   </button>
@@ -30,6 +32,8 @@
     class="material-icons-round"
     on:click={copy}
     disabled={!$selected.length}
+    class:suggested={$copyList.length}
+    title="Copy items"
   >
     content_copy
   </button>
@@ -37,6 +41,7 @@
     class="material-icons-round"
     on:click={paste}
     disabled={!$copyList.length && !$cutList.length}
+    title="Paste items"
   >
     content_paste
   </button>
