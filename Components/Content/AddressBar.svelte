@@ -2,6 +2,7 @@
   import { Runtime } from "$apps/FileManager/ts/runtime";
   import { pathToFriendlyPath } from "$ts/server/fs/util";
   import CopyPaste from "./AddressBar/CopyPaste.svelte";
+  import UpDownload from "./AddressBar/UpDownload.svelte";
 
   export let runtime: Runtime;
 
@@ -26,8 +27,5 @@
     <button class="material-icons-round">add</button>
   </div>
   <div class="sep" />
-  <div class="portion">
-    <button class="material-icons-round">upload</button>
-    <button class="material-icons-round">download</button>
-  </div>
+  <UpDownload {runtime} />
 </div>

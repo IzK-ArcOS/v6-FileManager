@@ -4,12 +4,9 @@ import { TrashIcon } from "$ts/images/general";
 import { Process } from "$ts/process";
 import { GlobalDispatch } from "$ts/process/dispatch/global";
 import { GetConfirmation, createErrorDialog } from "$ts/process/error";
-import { copyMultiple, renameMultiple } from "$ts/server/fs/copy";
 import { copyMultipleProgressy, renameMultipleProgressy } from "$ts/server/fs/copy/progress";
-import { deleteMultiple } from "$ts/server/fs/delete";
 import { deleteMultipleProgressy } from "$ts/server/fs/delete/progress";
 import { createDirectory, getParentDirectory, readDirectory } from "$ts/server/fs/dir";
-import { multipleFileUpload } from "$ts/server/fs/upload";
 import { multipleFileUploadProgressy } from "$ts/server/fs/upload/progress";
 import { pathToFriendlyName } from "$ts/server/fs/util";
 import { Plural } from "$ts/util";
@@ -38,11 +35,13 @@ export class Runtime extends AppRuntime {
   private async _init() {
     const args = this.process.args;
     const path = args[0] && typeof args[0] == "string" ? args[0] : "./";
+    const selection = args[1] && typeof args[1] == "string" ? [args[1]] : [];
 
     this.process.accelerator.store.push(...FileManagerAccelerators(this))
     await this.navigate(path);
     this.assignDispatchers();
     this.createSystemFolders();
+    this.selected.set(selection);
   }
 
   public async navigate(path: string) {
@@ -153,27 +152,22 @@ export class Runtime extends AppRuntime {
 
     if (!proceed) return;
 
-    //TODO: Add some kind of progress indicator here
     this.lockRefresh();
 
     await deleteMultipleProgressy(selected);
 
     this.unlockRefresh();
-    //TODO: Stop that progress indicator here
   }
 
   public async dropFiles(e: DragEvent) {
     e.preventDefault();
 
     this.lockRefresh();
-    //TODO: Add some kind of progress indicator here
 
     const target = this.path.get();
-
     await multipleFileUploadProgressy(e.dataTransfer.files, target)
 
     this.unlockRefresh();
-    //TODO: Stop that progress indicator here
   }
 
   private assignDispatchers() {
