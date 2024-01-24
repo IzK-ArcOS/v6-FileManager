@@ -18,7 +18,11 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
     {
       key: "escape",
       action() {
-        runtime.selected.set([]);
+        const renamer = runtime.renamer.get();
+
+        if (!renamer) return runtime.selected.set([]);
+
+        runtime.renamer.set("");
       }
     },
     {
@@ -39,6 +43,16 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
       alt: true,
       action() {
         runtime.refresh();
+      }
+    },
+    {
+      key: "f2",
+      action() {
+        const selected = runtime.selected.get();
+
+        if (selected.length !== 1) return;
+
+        runtime.renamer.set(selected[0]);
       }
     }
   ]

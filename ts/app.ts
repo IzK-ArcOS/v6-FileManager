@@ -14,8 +14,8 @@ export const FileManager: App = {
   runtime: Runtime,
   content: AppSvelte,
   id: "FileManager",
-  size: { w: 800, h: 500 },
-  minSize: { w: 650, h: 400 },
+  size: { w: 800, h: 600 },
+  minSize: { w: 650, h: 520 },
   maxSize: { w: 1400, h: 800 },
   pos: { x: 120, y: 60 },
   state: {

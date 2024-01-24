@@ -59,8 +59,7 @@
   margin: 0;
   height: fit-content;
   max-height: 2.6em;
-  text-shadow: #000 0 0 5px;
-  color: white;
+  color: var(--fg);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: initial;

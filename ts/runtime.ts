@@ -18,6 +18,7 @@ import { SystemFolders } from "./store";
 
 export class Runtime extends AppRuntime {
   public path = Store<string>();
+  public renamer = Store<string>("");
   public contents = Store<UserDirectory>();
   public selected = Store<string[]>([]);
   public cutList = Store<string[]>([]);
