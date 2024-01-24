@@ -29,4 +29,11 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#FileManager div.toolbar p.count img {
+  height: 16px;
 }

@@ -33,6 +33,13 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
       action() {
         runtime.deleteSelected();
       }
+    },
+    {
+      key: "r",
+      alt: true,
+      action() {
+        runtime.refresh();
+      }
     }
   ]
 }

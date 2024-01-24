@@ -15,7 +15,7 @@
   }
 
   async function upload() {
-    directUploadProgressy($path, true);
+    directUploadProgressy($path, true, runtime.pid);
   }
 </script>
 

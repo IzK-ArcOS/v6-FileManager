@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Runtime } from "$apps/FileManager/ts/runtime";
+  import { WarningIcon } from "$ts/images/dialog";
   import { pathToFriendlyName } from "$ts/server/fs/util";
   import { UserDataStore } from "$ts/stores/user";
   import { Plural as P } from "$ts/util";
@@ -39,6 +40,9 @@
       {P("item", size)} in {folder}
     {:else}
       {size} {P("item", size)} in {folder}
+    {/if}
+    {#if size > 1000}
+      <img src={WarningIcon} alt="Lots of items!" title="Lots of items!" />
     {/if}
   </p>
   <div class="view-modes">

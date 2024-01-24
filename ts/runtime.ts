@@ -154,7 +154,7 @@ export class Runtime extends AppRuntime {
 
     this.lockRefresh();
 
-    await deleteMultipleProgressy(selected);
+    await deleteMultipleProgressy(selected, this.pid);
 
     this.unlockRefresh();
   }
@@ -165,7 +165,7 @@ export class Runtime extends AppRuntime {
     this.lockRefresh();
 
     const target = this.path.get();
-    await multipleFileUploadProgressy(e.dataTransfer.files, target)
+    await multipleFileUploadProgressy(e.dataTransfer.files, target, this.pid)
 
     this.unlockRefresh();
   }
@@ -230,8 +230,8 @@ export class Runtime extends AppRuntime {
       cutObj[path] = target;
     }
 
-    await renameMultipleProgressy(cutObj);
-    await copyMultipleProgressy(copyObj);
+    await renameMultipleProgressy(cutObj, this.pid);
+    await copyMultipleProgressy(copyObj, this.pid);
 
     this.copyList.set([]);
     this.cutList.set([]);

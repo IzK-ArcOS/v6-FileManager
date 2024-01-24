@@ -4,7 +4,7 @@
 @import url("./toolbar.css");
 @import url("./addressbar.css");
 
-#FileManager div.body {
+#FileManager > div.body {
   display: flex;
   height: 100%;
   padding: 0;
