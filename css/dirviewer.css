@@ -6,6 +6,7 @@
 @import url("./dirviewer/empty.css");
 @import url("./dirviewer/center.css");
 @import url("./dirviewer/dropper.css");
+@import url("./dirviewer/newfolder.css");
 
 #FileManager div.directory-viewer {
   display: flex;
@@ -15,6 +16,10 @@
   padding: 15px;
   gap: 5px;
   position: relative;
+}
+
+#FileManager div.directory-viewer.newfolder {
+  height: calc(100% - var(--titlebar-height) - 40px - 45px - 50px);
 }
 
 #FileManager div.directory-viewer.dropping {

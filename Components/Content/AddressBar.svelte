@@ -6,7 +6,7 @@
 
   export let runtime: Runtime;
 
-  const { path } = runtime;
+  const { path, newFolder } = runtime;
 </script>
 
 <div class="address-bar">
@@ -23,8 +23,13 @@
   <CopyPaste {runtime} />
   <div class="sep" />
   <div class="portion">
-    <button class="material-icons-round">create_new_folder</button>
-    <button class="material-icons-round">add</button>
+    <button
+      class="material-icons-round"
+      on:click={() => ($newFolder = true)}
+      class:suggested={$newFolder}
+    >
+      create_new_folder
+    </button>
   </div>
   <div class="sep" />
   <UpDownload {runtime} />

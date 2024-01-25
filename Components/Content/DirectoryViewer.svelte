@@ -7,10 +7,11 @@
   import FolderItem from "./DirectoryViewer/FolderItem.svelte";
   import Header from "./DirectoryViewer/Header.svelte";
   import Loading from "./DirectoryViewer/Loading.svelte";
+  import NewFolder from "./DirectoryViewer/NewFolder.svelte";
 
   export let runtime: Runtime;
 
-  const { loading, failed, contents, selected } = runtime;
+  const { loading, failed, contents, newFolder } = runtime;
   let dropping = false;
 
   function dragOver(e: DragEvent) {
@@ -26,6 +27,7 @@
   }
 </script>
 
+<NewFolder {runtime} />
 <div
   class="directory-viewer"
   role="directory"
@@ -34,15 +36,16 @@
   on:dragenter={() => (dropping = true)}
   on:dragleave={() => (dropping = false)}
   class:grid={$UserDataStore.appdata.FileManager.grid}
+  class:newfolder={$newFolder}
   class:dropping
 >
   <Header />
   {#if $contents}
     {#each $contents.directories as dir}
-      <FolderItem {dir} {runtime} selected={$selected} />
+      <FolderItem {dir} {runtime} />
     {/each}
     {#each $contents.files as file}
-      <FileItem {file} {runtime} selected={$selected} />
+      <FileItem {file} {runtime} />
     {/each}
     <!---->
     {#if !$contents.files.length && !$contents.directories.length}

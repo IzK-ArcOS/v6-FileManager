@@ -25,6 +25,7 @@ export class Runtime extends AppRuntime {
   public copyList = Store<string[]>([]);
   public loading = Store<boolean>(true);
   public failed = Store<boolean>(false);
+  public newFolder = Store<boolean>(false);
   private _refreshLocked = false;
 
   constructor(app: App, mutator: AppMutator, process: Process) {
@@ -36,7 +37,7 @@ export class Runtime extends AppRuntime {
   private async _init() {
     const args = this.process.args;
     const path = args[0] && typeof args[0] == "string" ? args[0] : "./";
-    const selection = args[1] && typeof args[1] == "string" ? [args[1]] : [];
+    const selection = args[1] && typeof args[1] == "string" ? [args[1].replace("./", "")] : [];
 
     this.process.accelerator.store.push(...FileManagerAccelerators(this))
     await this.navigate(path);
@@ -74,10 +75,6 @@ export class Runtime extends AppRuntime {
     this.selected.set([]);
 
     return true;
-  }
-
-  public async openFile(file: PartialArcFile) {
-    console.log(file);//TODO
   }
 
   public async parentDir() {
@@ -226,13 +223,11 @@ export class Runtime extends AppRuntime {
   }
 
   public setCopyFiles(files = this.selected.get()) {
-    console.log(files)
     this.copyList.set(files);
     this.cutList.set([]);
   }
 
   public setCutFiles(files = this.selected.get()) {
-    console.log(files)
     this.cutList.set(files);
     this.copyList.set([]);
   }
