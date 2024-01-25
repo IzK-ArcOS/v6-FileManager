@@ -1,7 +1,13 @@
 import { ArcTermFolderIcon, DocumentsFolderIcon, FolderIcon, ThemeFolderIcon, WallpapersFolderIcon } from "$ts/images/filesystem";
+import { HomeIcon } from "$ts/images/general";
 import { SystemFolder } from "./types";
 
 export const SystemFolders: SystemFolder[] = [
+  {
+    name: "Home",
+    path: "./",
+    icon: HomeIcon
+  },
   {
     name: "Documents",
     path: "./Documents",

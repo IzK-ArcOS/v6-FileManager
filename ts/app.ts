@@ -1,6 +1,7 @@
 import { FileManagerIcon } from "$ts/images/apps";
 import { App } from "$types/app";
 import AppSvelte from "../App.svelte";
+import { FileManagerContextMenus } from "./context";
 import { Runtime } from "./runtime";
 
 export const FileManager: App = {
@@ -30,5 +31,6 @@ export const FileManager: App = {
     maximize: true,
     close: true,
   },
-  glass: true
+  glass: true,
+  contextMenu: FileManagerContextMenus
 }

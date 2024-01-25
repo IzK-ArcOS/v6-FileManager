@@ -177,6 +177,28 @@ export class Runtime extends AppRuntime {
     this.process.handler.dispatch.subscribe(this.process.pid, "change-dir", (data: string) => {
       if (typeof data === "string") this.navigate(data)
     })
+
+    this.process.handler.dispatch.subscribe(this.process.pid, "context-copy", (data: string) => {
+      this.setCopyFiles([data]);
+    })
+
+    this.process.handler.dispatch.subscribe(this.process.pid, "context-cut", (data: string) => {
+      this.setCutFiles([data]);
+    })
+
+    this.process.handler.dispatch.subscribe(this.process.pid, "context-paste", () => {
+      this.pasteFiles();
+    })
+
+    this.process.handler.dispatch.subscribe(this.process.pid, "context-delete", async (data: string) => {
+      this.selected.set([data]);
+
+      await this.deleteSelected();
+    });
+
+    this.process.handler.dispatch.subscribe(this.process.pid, "context-rename", (data: string) => {
+      this.renamer.set(data);
+    })
   }
 
   private async createSystemFolders() {
@@ -204,11 +226,13 @@ export class Runtime extends AppRuntime {
   }
 
   public setCopyFiles(files = this.selected.get()) {
+    console.log(files)
     this.copyList.set(files);
     this.cutList.set([]);
   }
 
   public setCutFiles(files = this.selected.get()) {
+    console.log(files)
     this.cutList.set(files);
     this.copyList.set([]);
   }

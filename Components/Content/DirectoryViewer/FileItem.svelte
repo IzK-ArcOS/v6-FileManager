@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Runtime } from "$apps/FileManager/ts/runtime";
   import { formatBytes } from "$ts/bytes";
-  import { renameItem } from "$ts/server/fs/copy";
   import { OpenFile } from "$ts/server/fs/file/handler";
   import { getMimeIcon } from "$ts/server/fs/mime";
   import { RelativeTimeMod } from "$ts/stores/dayjs";
@@ -12,18 +11,16 @@
   import updateLocale from "dayjs/plugin/updateLocale";
   import { fromMime } from "human-filetypes";
   import { onMount } from "svelte";
+  import Renamer from "./Item/Renamer.svelte";
 
   export let runtime: Runtime;
   export let file: PartialArcFile;
-  export let selected: string[];
 
-  const { cutList, copyList, path, renamer } = runtime;
+  const { cutList, copyList, renamer, selected } = runtime;
 
   let date = "";
   let mime = "";
   let icon = "";
-  let filename = "";
-  let input: HTMLInputElement;
 
   onMount(() => {
     dayjs.extend(relativeTime);
@@ -36,7 +33,6 @@
 
     mime = m.replace(m[0], m[0].toUpperCase());
     icon = getMimeIcon(file.filename);
-    filename = file.filename;
   });
 
   async function select(e: MouseEvent) {
@@ -50,25 +46,6 @@
 
     OpenFile(file, runtime.pid);
   }
-
-  async function rename(e: SubmitEvent) {
-    e.preventDefault();
-
-    await renameItem(file.scopedPath, `${$path}/${filename}`);
-    await runtime.refresh();
-
-    $renamer = "";
-  }
-
-  renamer.subscribe(async (v) => {
-    if (v == file.filename) {
-      await sleep(10);
-
-      if (!input) return;
-
-      input.focus();
-    }
-  });
 </script>
 
 <button
@@ -77,20 +54,14 @@
   on:dblclick={open}
   class:cutting={$cutList.includes(file.scopedPath)}
   class:copying={$copyList.includes(file.scopedPath)}
-  class:selected={selected.includes(file.scopedPath)}
+  class:selected={$selected.includes(file.scopedPath)}
+  data-contextmenu="dirviewer-file"
+  data-path={file.scopedPath}
 >
   <div class="segment icon">
     <img src={icon} alt="" />
   </div>
-  <div class="segment name" title={file.filename}>
-    {#if $renamer == file.scopedPath}
-      <form on:submit={rename}>
-        <input type="text" bind:value={filename} bind:this={input} />
-      </form>
-    {:else}
-      {file.filename}
-    {/if}
-  </div>
+  <Renamer itempath={file.scopedPath} name={file.filename} {runtime} />
   <div class="segment type">{mime}</div>
   <div class="segment size">{formatBytes(file.size)}</div>
   <div class="segment modified">{date}</div>
