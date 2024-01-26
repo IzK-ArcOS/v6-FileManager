@@ -40,9 +40,10 @@ export class Runtime extends AppRuntime {
     const selection = args[1] && typeof args[1] == "string" ? [args[1].replace("./", "")] : [];
 
     this.process.accelerator.store.push(...FileManagerAccelerators(this))
+
     await this.navigate(path);
+    await this.createSystemFolders();
     this.assignDispatchers();
-    this.createSystemFolders();
     this.selected.set(selection);
   }
 
@@ -203,7 +204,7 @@ export class Runtime extends AppRuntime {
 
     if (!contents) throw new Error("TODO");
 
-    if (contents.scopedPath != "./") return;
+    if (contents.scopedPath != ".") return;
 
     this.lockRefresh();
 
