@@ -216,7 +216,7 @@ export class Runtime extends AppRuntime {
     const rootDirs = contents.directories.map((a) => `./${a.scopedPath}`);
 
     for (const { path } of SystemFolders) {
-      if (rootDirs.includes(path)) continue;
+      if (rootDirs.includes(path) || path == "./") continue;
 
       await createDirectory(path);
     }
