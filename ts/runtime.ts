@@ -7,12 +7,14 @@ import { GetConfirmation, createErrorDialog } from "$ts/process/error";
 import { copyMultipleProgressy, renameMultipleProgressy } from "$ts/server/fs/copy/progress";
 import { deleteMultipleProgressy } from "$ts/server/fs/delete/progress";
 import { createDirectory, getParentDirectory, readDirectory } from "$ts/server/fs/dir";
+import { getFSQuota } from "$ts/server/fs/quota";
 import { multipleFileUploadProgressy } from "$ts/server/fs/upload/progress";
 import { pathToFriendlyName } from "$ts/server/fs/util";
+import { defaultQuota } from "$ts/stores/quota";
 import { Plural } from "$ts/util";
 import { Store } from "$ts/writable";
 import type { App, AppMutator } from "$types/app";
-import { UserDirectory } from "$types/fs";
+import { FSQuota, UserDirectory } from "$types/fs";
 import { FileManagerAccelerators } from "./accelerators";
 import { SystemFolders } from "./store";
 
@@ -27,6 +29,7 @@ export class Runtime extends AppRuntime {
   public failed = Store<boolean>(false);
   public newFolder = Store<boolean>(false);
   public starting = Store<boolean>(true);
+  public quota = Store<FSQuota>(defaultQuota);
   private _refreshLocked = false;
 
   constructor(app: App, mutator: AppMutator, process: Process) {
@@ -67,6 +70,7 @@ export class Runtime extends AppRuntime {
 
     const contents = await readDirectory(this.path.get());
 
+    this.quota.set(await getFSQuota());
     this.loading.set(false);
 
     if (!contents) {

@@ -15,5 +15,5 @@
       <Folder {folder} {runtime} current={$path} />
     {/each}
   </div>
-  <Quota />
+  <Quota {runtime} />
 </div>

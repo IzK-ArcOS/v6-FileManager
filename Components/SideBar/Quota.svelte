@@ -1,27 +1,18 @@
 <script lang="ts">
+  import { Runtime } from "$apps/FileManager/ts/runtime";
   import { formatBytes } from "$ts/bytes";
-  import { GlobalDispatch } from "$ts/process/dispatch/global";
-  import { getFSQuota } from "$ts/server/fs/quota";
-  import { defaultQuota } from "$ts/stores/quota";
-  import { FSQuota } from "$types/fs";
-  import { onMount } from "svelte";
 
-  let quota: FSQuota = defaultQuota;
+  export let runtime: Runtime;
 
-  async function update() {
-    quota = await getFSQuota();
-  }
-
-  onMount(update);
-  GlobalDispatch.subscribe("fs-flush", update);
+  const { quota } = runtime;
 </script>
 
 <div class="fs-quota">
   <div class="bar">
-    <div class="inner" style="--w: {(100 / quota.max) * quota.used}%;" />
+    <div class="inner" style="--w: {(100 / $quota.max) * $quota.used}%;" />
   </div>
   <div class="stats">
-    <p class="used">{formatBytes(quota.used)}</p>
-    <p class="max">{formatBytes(quota.max)}</p>
+    <p class="used">{formatBytes($quota.used)}</p>
+    <p class="max">{formatBytes($quota.max)}</p>
   </div>
 </div>

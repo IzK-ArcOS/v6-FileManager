@@ -49,7 +49,7 @@
     <button
       class="material-icons-round"
       class:suggested={!grid}
-      on:click={gridOff}>list</button
+      on:click={gridOff}>format_list_bulleted</button
     >
     <button
       class="material-icons-round"
