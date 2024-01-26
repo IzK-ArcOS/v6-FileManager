@@ -45,11 +45,11 @@ export class Runtime extends AppRuntime {
 
     this.process.accelerator.store.push(...FileManagerAccelerators(this))
 
-    await this.navigate(path);
     await this.createSystemFolders();
+    await this.navigate(path);
+    this.quota.set(await getFSQuota());
     this.assignDispatchers();
     this.selected.set(selection);
-
     this.starting.set(false);
   }
 
@@ -70,7 +70,6 @@ export class Runtime extends AppRuntime {
 
     const contents = await readDirectory(this.path.get());
 
-    this.quota.set(await getFSQuota());
     this.loading.set(false);
 
     if (!contents) {
@@ -177,7 +176,10 @@ export class Runtime extends AppRuntime {
   }
 
   private assignDispatchers() {
-    GlobalDispatch.subscribe("fs-flush", () => this.refresh());
+    GlobalDispatch.subscribe("fs-flush", async () => {
+      this.quota.set(await getFSQuota())
+      this.refresh()
+    });
 
     this.process.handler.dispatch.subscribe(this.process.pid, "change-dir", (data: string) => {
       if (typeof data === "string") this.navigate(data)
@@ -207,15 +209,9 @@ export class Runtime extends AppRuntime {
   }
 
   private async createSystemFolders() {
-    const contents = this.contents.get();
-
-    if (!contents) throw new Error("TODO");
-
-    if (contents.scopedPath != ".") return;
+    const contents = await readDirectory("./");
 
     this.lockRefresh();
-
-    let createdAnything = false;
 
     const rootDirs = contents.directories.map((a) => `./${a.scopedPath}`);
 
@@ -223,11 +219,9 @@ export class Runtime extends AppRuntime {
       if (rootDirs.includes(path)) continue;
 
       await createDirectory(path);
-
-      createdAnything = true;
     }
 
-    this.unlockRefresh(createdAnything);
+    this.unlockRefresh(false);
   }
 
   public setCopyFiles(files = this.selected.get()) {
