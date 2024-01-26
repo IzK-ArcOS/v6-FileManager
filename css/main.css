@@ -3,6 +3,7 @@
 @import url("./dirviewer.css");
 @import url("./toolbar.css");
 @import url("./addressbar.css");
+@import url("./splash.css");
 
 #FileManager > div.body {
   display: flex;

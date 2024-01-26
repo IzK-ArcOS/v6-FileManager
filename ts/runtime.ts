@@ -12,7 +12,7 @@ import { pathToFriendlyName } from "$ts/server/fs/util";
 import { Plural } from "$ts/util";
 import { Store } from "$ts/writable";
 import type { App, AppMutator } from "$types/app";
-import { PartialArcFile, UserDirectory } from "$types/fs";
+import { UserDirectory } from "$types/fs";
 import { FileManagerAccelerators } from "./accelerators";
 import { SystemFolders } from "./store";
 
@@ -26,6 +26,7 @@ export class Runtime extends AppRuntime {
   public loading = Store<boolean>(true);
   public failed = Store<boolean>(false);
   public newFolder = Store<boolean>(false);
+  public starting = Store<boolean>(true);
   private _refreshLocked = false;
 
   constructor(app: App, mutator: AppMutator, process: Process) {
@@ -45,6 +46,8 @@ export class Runtime extends AppRuntime {
     await this.createSystemFolders();
     this.assignDispatchers();
     this.selected.set(selection);
+
+    this.starting.set(false);
   }
 
   public async navigate(path: string) {
