@@ -2,7 +2,7 @@
   import { Runtime } from "$apps/FileManager/ts/runtime";
   import { renameItem } from "$ts/server/fs/copy";
   import { sleep } from "$ts/util";
-  import { onMount } from "svelte";
+  import { Store } from "$ts/writable";
 
   export let itempath: string;
   export let name: string;
@@ -10,13 +10,13 @@
 
   const { renamer, path } = runtime;
 
-  let filename: string;
+  let filename = Store<string>();
   let input: HTMLInputElement;
 
   async function rename(e: SubmitEvent) {
     e.preventDefault();
 
-    await renameItem(itempath, `${$path}/${filename}`);
+    await renameItem(itempath, `${$path}/${$filename}`);
     await runtime.refresh();
 
     $renamer = "";
@@ -24,6 +24,8 @@
 
   renamer.subscribe(async (v) => {
     if (v == name) {
+      $filename = name.includes("$new") ? "" : name;
+
       await sleep(10);
 
       if (!input) return;
@@ -31,16 +33,12 @@
       input.focus();
     }
   });
-
-  onMount(() => {
-    filename = name;
-  });
 </script>
 
 <div class="segment name" title={name}>
   {#if $renamer == itempath}
     <form on:submit={rename}>
-      <input type="text" bind:value={filename} bind:this={input} />
+      <input type="text" bind:value={$filename} bind:this={input} />
     </form>
   {:else}
     {name}

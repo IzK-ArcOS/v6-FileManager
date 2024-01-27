@@ -1,5 +1,6 @@
 import { ArcTermFolderIcon, DocumentsFolderIcon, FolderIcon, ThemeFolderIcon, WallpapersFolderIcon } from "$ts/images/filesystem";
 import { HomeIcon } from "$ts/images/general";
+import { pathToFriendlyPath } from "$ts/server/fs/util";
 import { SystemFolder } from "./types";
 
 export const SystemFolders: SystemFolder[] = [
@@ -34,3 +35,13 @@ export const SystemFolders: SystemFolder[] = [
     icon: FolderIcon,
   }
 ]
+
+export function GetSystemFolderIcon(path: string) {
+  path = `./${pathToFriendlyPath(path)}`;
+
+  const folders = SystemFolders.filter((a) => a.path == path);
+
+  if (!folders.length) return FolderIcon;
+
+  return folders[0].icon
+}

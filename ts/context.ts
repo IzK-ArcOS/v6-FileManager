@@ -163,7 +163,7 @@ export const FileManagerContextMenus: AppContextMenu = {
         async action(window, data) {
           const id = Math.floor(Math.random() * 1e3);
           const blob = new Blob();
-          const filename = `${data.path}/Empty File (${id}).new`.replaceAll("//", "/");
+          const filename = `${data.path}/$new${id}.$new`.replaceAll("//", "/");
 
           await writeFile(filename, blob);
 

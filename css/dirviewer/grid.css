@@ -21,6 +21,7 @@
 }
 
 #FileManager div.directory-viewer.grid button {
+  position: relative;
   display: flex;
   vertical-align: top;
   flex-direction: column;
@@ -32,6 +33,7 @@
   border: none;
   border-radius: 5px;
   background-color: transparent;
+  min-height: 64px;
 }
 
 #FileManager div.directory-viewer.grid button div.segment.icon img {
@@ -63,7 +65,28 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: initial;
-  overflow: hidden;
   display: inline-block;
-  text-overflow: ellipsis;
+}
+
+#FileManager div.directory-viewer button.renaming div.segment.name {
+  overflow: visible !important;
+  display: flex;
+  justify-content: center;
+}
+
+#FileManager div.directory-viewer.grid button.renaming div.segment.name form {
+  text-align: left;
+  width: fit-content;
+  overflow: visible;
+}
+#FileManager div.directory-viewer.grid button input {
+  left: -2px;
+  width: 84px;
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+  margin-top: -1px;
+  position: absolute;
+  z-index: 1000;
+  overflow: hidden;
 }

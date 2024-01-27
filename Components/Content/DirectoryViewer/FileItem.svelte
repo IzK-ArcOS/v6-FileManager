@@ -57,6 +57,7 @@
   class:selected={$selected.includes(file.scopedPath)}
   data-contextmenu="dirviewer-file"
   data-path={file.scopedPath}
+  class:renaming={file.scopedPath == $renamer}
 >
   <div class="segment icon">
     <img src={icon} alt="" />
