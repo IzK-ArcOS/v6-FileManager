@@ -188,16 +188,24 @@ export class Runtime extends AppRuntime {
       this.refresh()
     });
 
+    this.process.handler.dispatch.subscribe(this.process.pid, "refresh", () => {
+      this.refresh()
+    })
+
+    this.process.handler.dispatch.subscribe(this.process.pid, "new-folder", () => {
+      this.newFolder.set(true);
+    })
+
     this.process.handler.dispatch.subscribe(this.process.pid, "change-dir", (data: string) => {
       if (typeof data === "string") this.navigate(data)
     })
 
     this.process.handler.dispatch.subscribe(this.process.pid, "context-copy", (data: string) => {
-      this.setCopyFiles([data]);
+      this.setCopyFiles(data ? [data] : null);
     })
 
     this.process.handler.dispatch.subscribe(this.process.pid, "context-cut", (data: string) => {
-      this.setCutFiles([data]);
+      this.setCutFiles(data ? [data] : null);
     })
 
     this.process.handler.dispatch.subscribe(this.process.pid, "context-paste", () => {
@@ -212,6 +220,7 @@ export class Runtime extends AppRuntime {
 
     this.process.handler.dispatch.subscribe(this.process.pid, "context-rename", (data: string) => {
       this.renamer.set(data);
+      console.log(data);
     })
   }
 

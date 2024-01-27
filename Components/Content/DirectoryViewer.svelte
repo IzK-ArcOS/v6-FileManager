@@ -11,7 +11,7 @@
 
   export let runtime: Runtime;
 
-  const { loading, failed, contents, newFolder } = runtime;
+  const { loading, failed, contents, newFolder, path } = runtime;
   let dropping = false;
 
   function dragOver(e: DragEvent) {
@@ -38,6 +38,8 @@
   class:grid={$UserDataStore.appdata.FileManager.grid}
   class:newfolder={$newFolder}
   class:dropping
+  data-contextmenu="dirviewer"
+  data-path={$path}
 >
   <Header />
   {#if $contents}

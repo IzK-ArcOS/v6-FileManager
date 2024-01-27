@@ -12,6 +12,8 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
       ctrl: true,
       key: "a",
       action() {
+        if (runtime.renamer.get()) return;
+
         runtime.selectAll();
       }
     },
