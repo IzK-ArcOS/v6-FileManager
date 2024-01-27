@@ -1,12 +1,11 @@
 <script lang="ts">
   import { Runtime } from "$apps/FileManager/ts/runtime";
+  import { GetSystemFolderIcon } from "$apps/FileManager/ts/store";
   import { FolderIcon } from "$ts/images/filesystem";
   import { sleep } from "$ts/util";
   import { PartialUserDir } from "$types/fs";
   import { onMount } from "svelte";
   import Renamer from "./Item/Renamer.svelte";
-  import { GetSystemFolderIcon } from "$apps/FileManager/ts/store";
-  import Folder from "../../SideBar/Folder.svelte";
 
   export let runtime: Runtime;
   export let dir: PartialUserDir;
