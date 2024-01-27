@@ -16,6 +16,7 @@ import { Store } from "$ts/writable";
 import type { App, AppMutator } from "$types/app";
 import { FSQuota, UserDirectory } from "$types/fs";
 import { FileManagerAccelerators } from "./accelerators";
+import { FileManagerAltMenu } from "./altmenu";
 import { SystemFolders } from "./store";
 
 export class Runtime extends AppRuntime {
@@ -48,17 +49,23 @@ export class Runtime extends AppRuntime {
     await this.createSystemFolders();
     await this.navigate(path);
     this.quota.set(await getFSQuota());
+    this.loadAltMenu(...FileManagerAltMenu(this));
     this.assignDispatchers();
     this.selected.set(selection);
+
     this.starting.set(false);
   }
 
   public async navigate(path: string) {
+    const cwd = this.path.get();
+
+    if (cwd == path) return;
+
     this.path.set(path);
 
     await this.refresh();
 
-    this.setWindowTitle(pathToFriendlyName(path), true)
+    this.setWindowTitle(pathToFriendlyName(path), false)
   }
 
   public async refresh() {
