@@ -1,3 +1,4 @@
+import { spawnApp } from "$ts/apps";
 import { AppRuntime } from "$ts/apps/runtime";
 import { ErrorIcon } from "$ts/images/dialog";
 import { TrashIcon } from "$ts/images/general";
@@ -303,7 +304,7 @@ export class Runtime extends AppRuntime {
     return this.contents.get().files.filter((a) => a.scopedPath == path)[0];
   }
 
-  public async EnterKey(openWith = false) {
+  public async EnterKey(alternative = false) {
     this.singlefySelected();
 
     const selected = this.selected.get()[0];
@@ -313,7 +314,8 @@ export class Runtime extends AppRuntime {
     const isDir = this.isDirectory(selected);
 
     if (isDir) {
-      await this.navigate(selected);
+      if (!alternative) await this.navigate(selected);
+      else spawnApp("FileManager", 0, [selected])
 
       return;
     }
@@ -322,7 +324,7 @@ export class Runtime extends AppRuntime {
 
     if (!file) return;
 
-    if (openWith) OpenWith(file, this.pid, true)
+    if (alternative) OpenWith(file, this.pid, true)
     else await OpenFile(file)
   }
 }
