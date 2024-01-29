@@ -32,5 +32,13 @@ export const FileManager: App = {
     close: true,
   },
   glass: true,
-  contextMenu: FileManagerContextMenus
+  contextMenu: FileManagerContextMenus,
+  acceleratorDescriptions: {
+    "ctrl+a": "Select all items in the folder",
+    "esc": "Clear the current selection",
+    "alt+up": "Go to the parent directory",
+    "del": "Delete the currently selected items",
+    "alt+r": "Reload the directory",
+    "f2": "Rename the item (if there's only one selected)"
+  }
 }
