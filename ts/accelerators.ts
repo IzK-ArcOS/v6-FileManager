@@ -56,6 +56,33 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
 
         runtime.renamer.set(selected[0]);
       }
+    },
+    {
+      key: "arrowdown",
+      action() {
+        runtime.selectorDown();
+      }
+    },
+    {
+      key: "arrowup",
+      action() {
+        runtime.selectorUp();
+      }
+    },
+    {
+      key: "enter",
+      shift: true,
+      action() {
+        console.log("shift+Enter")
+        runtime.EnterKey(true)
+      }
+    },
+    {
+      key: "enter",
+      action() {
+        console.log("Enter")
+        runtime.EnterKey()
+      }
     }
   ]
 }

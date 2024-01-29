@@ -7,6 +7,7 @@ import { GetConfirmation, createErrorDialog } from "$ts/process/error";
 import { copyMultipleProgressy, renameMultipleProgressy } from "$ts/server/fs/copy/progress";
 import { deleteMultipleProgressy } from "$ts/server/fs/delete/progress";
 import { createDirectory, getParentDirectory, readDirectory } from "$ts/server/fs/dir";
+import { OpenFile, OpenWith } from "$ts/server/fs/file/handler";
 import { getFSQuota } from "$ts/server/fs/quota";
 import { multipleFileUploadProgressy } from "$ts/server/fs/upload/progress";
 import { pathToFriendlyName } from "$ts/server/fs/util";
@@ -17,7 +18,7 @@ import type { App, AppMutator } from "$types/app";
 import { FSQuota, UserDirectory } from "$types/fs";
 import { FileManagerAccelerators } from "./accelerators";
 import { FileManagerAltMenu } from "./altmenu";
-import { SystemFolders } from "./store";
+import { FileManagerDispatches, SystemFolders } from "./store";
 
 export class Runtime extends AppRuntime {
   public path = Store<string>();
@@ -188,40 +189,13 @@ export class Runtime extends AppRuntime {
       this.refresh()
     });
 
-    this.process.handler.dispatch.subscribe(this.process.pid, "refresh", () => {
-      this.refresh()
-    })
+    const dispatchers = FileManagerDispatches(this);
 
-    this.process.handler.dispatch.subscribe(this.process.pid, "new-folder", () => {
-      this.newFolder.set(true);
-    })
+    for (const event in dispatchers) {
+      const dispatcher = dispatchers[event];
 
-    this.process.handler.dispatch.subscribe(this.process.pid, "change-dir", (data: string) => {
-      if (typeof data === "string") this.navigate(data)
-    })
-
-    this.process.handler.dispatch.subscribe(this.process.pid, "context-copy", (data: string) => {
-      this.setCopyFiles(data ? [data] : null);
-    })
-
-    this.process.handler.dispatch.subscribe(this.process.pid, "context-cut", (data: string) => {
-      this.setCutFiles(data ? [data] : null);
-    })
-
-    this.process.handler.dispatch.subscribe(this.process.pid, "context-paste", () => {
-      this.pasteFiles();
-    })
-
-    this.process.handler.dispatch.subscribe(this.process.pid, "context-delete", async (data: string) => {
-      this.selected.set([data]);
-
-      await this.deleteSelected();
-    });
-
-    this.process.handler.dispatch.subscribe(this.process.pid, "context-rename", (data: string) => {
-      this.renamer.set(data);
-      console.log(data);
-    })
+      this.process.handler.dispatch.subscribe(this.pid, event, dispatcher);
+    }
   }
 
   private async createSystemFolders() {
@@ -275,5 +249,80 @@ export class Runtime extends AppRuntime {
     this.cutList.set([]);
 
     this.unlockRefresh();
+  }
+
+  public singlefySelected() {
+    const selected = this.selected.get();
+
+    if (!selected.length) return;
+
+    this.selected.set([selected[selected.length - 1]]);
+  }
+
+  public selectorUp() {
+    this.singlefySelected();
+
+    const selected = this.selected.get()[0];
+    const dir = this.contents.get();
+    const paths = [
+      ...dir.directories.map((a) => a.scopedPath),
+      ...dir.files.map((a) => a.scopedPath)
+    ];
+    const index = paths.indexOf(selected);
+
+    if (!selected) this.selected.set([paths[0]])
+
+    this.selected.set([paths[(index < 0 || index - 1 < 0) ? paths.length - 1 : index - 1]]);
+  }
+
+  public selectorDown() {
+    this.singlefySelected();
+
+    const selected = this.selected.get()[0];
+    const dir = this.contents.get();
+    const paths = [
+      ...dir.directories.map((a) => a.scopedPath),
+      ...dir.files.map((a) => a.scopedPath)
+    ];
+    const index = paths.indexOf(selected);
+
+    if (!selected) this.selected.set([paths[0]])
+
+    this.selected.set([paths[(index < 0 || index + 1 > paths.length - 1) ? 0 : index + 1]]);
+  }
+
+  public isDirectory(path: string) {
+    const dir = this.contents.get();
+
+    return dir.directories.map((a) => a.scopedPath).includes(path)
+  }
+
+  public getFile(path: string) {
+    if (this.isDirectory(path)) return null;
+
+    return this.contents.get().files.filter((a) => a.scopedPath == path)[0];
+  }
+
+  public async EnterKey(openWith = false) {
+    this.singlefySelected();
+
+    const selected = this.selected.get()[0];
+
+    if (!selected) return;
+
+    const isDir = this.isDirectory(selected);
+
+    if (isDir) {
+      await this.navigate(selected);
+
+      return;
+    }
+
+    const file = this.getFile(selected);
+
+    if (!file) return;
+
+    if (openWith) OpenWith(file, this.pid, true)
+    else await OpenFile(file)
   }
 }
