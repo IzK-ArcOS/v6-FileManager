@@ -100,7 +100,7 @@ export class Runtime extends AppRuntime {
     const current = this.path.get();
     const parent = getParentDirectory(current);
 
-    if (parent == current) return;
+    if (parent == current || this.loading.get()) return;
 
     return await this.navigate(parent);
   }
