@@ -37,6 +37,8 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
     {
       key: "delete",
       action() {
+        if (runtime.renamer.get()) return;
+
         runtime.deleteSelected();
       }
     },
@@ -50,6 +52,8 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
     {
       key: "f2",
       action() {
+        if (runtime.renamer.get()) return;
+
         const selected = runtime.selected.get();
 
         if (selected.length !== 1) return;
@@ -60,12 +64,16 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
     {
       key: "arrowdown",
       action() {
+        if (runtime.renamer.get()) return;
+
         runtime.selectorDown();
       }
     },
     {
       key: "arrowup",
       action() {
+        if (runtime.renamer.get()) return;
+
         runtime.selectorUp();
       }
     },
@@ -73,14 +81,16 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
       key: "enter",
       shift: true,
       action() {
-        console.log("shift+Enter")
+        if (runtime.renamer.get()) return;
+
         runtime.EnterKey(true)
       }
     },
     {
       key: "enter",
       action() {
-        console.log("Enter")
+        if (runtime.renamer.get()) return;
+
         runtime.EnterKey()
       }
     }

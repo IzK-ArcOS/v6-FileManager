@@ -165,11 +165,11 @@ export const FileManagerContextMenus: AppContextMenu = {
           const blob = new Blob();
           const filename = `${data.path}/$new${id}.$new`.replaceAll("//", "/");
 
+          ProcessStack.dispatch.dispatchToPid(window.pid, "context-rename", pathToFriendlyPath(filename))
+
           await writeFile(filename, blob);
 
           await sleep(100);
-
-          ProcessStack.dispatch.dispatchToPid(window.pid, "context-rename", pathToFriendlyPath(filename))
         }
       },
       {

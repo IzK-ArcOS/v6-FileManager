@@ -23,7 +23,7 @@
   }
 
   renamer.subscribe(async (v) => {
-    if (v == name) {
+    if (v == itempath) {
       $filename = name.includes("$new") ? "" : name;
 
       await sleep(10);

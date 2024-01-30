@@ -6,6 +6,7 @@ import { Process } from "$ts/process";
 import { GlobalDispatch } from "$ts/process/dispatch/global";
 import { GetConfirmation, createErrorDialog } from "$ts/process/error";
 import { copyMultipleProgressy, renameMultipleProgressy } from "$ts/server/fs/copy/progress";
+import { deleteItem } from "$ts/server/fs/delete";
 import { deleteMultipleProgressy } from "$ts/server/fs/delete/progress";
 import { createDirectory, getParentDirectory, readDirectory } from "$ts/server/fs/dir";
 import { OpenFile, OpenWith } from "$ts/server/fs/file/handler";
@@ -66,6 +67,8 @@ export class Runtime extends AppRuntime {
     this.path.set(path);
 
     await this.refresh();
+
+    await this.checkNewfileRemains();
 
     this.setWindowTitle(pathToFriendlyName(path), false)
   }
@@ -326,5 +329,28 @@ export class Runtime extends AppRuntime {
 
     if (alternative) OpenWith(file, this.pid, true)
     else await OpenFile(file)
+  }
+
+  public async checkNewfileRemains() {
+    const contents = this.contents.get();
+
+    if (!contents) return;
+
+    const files = contents.files.filter((a) => a.filename.includes("$new"));
+    const renamer = this.renamer.get();
+
+    let deletedAnything = false;
+
+    for (const file of files) {
+      if (renamer == file.scopedPath) continue;
+
+      deletedAnything = await deleteItem(file.scopedPath, false);
+    }
+
+    if (deletedAnything) {
+      await this.refresh();
+
+      GlobalDispatch.dispatch("fs-flush");
+    }
   }
 }
