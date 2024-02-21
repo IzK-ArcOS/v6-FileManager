@@ -11,10 +11,7 @@
 
 <div class="address-bar">
   <div class="portion address">
-    <button
-      class="material-icons-round parent"
-      on:click={() => runtime.parentDir()}
-    >
+    <button class="material-icons-round parent" on:click={() => runtime.parentDir()}>
       arrow_upward
     </button>
     <div class="path">{pathToFriendlyPath($path)}</div>

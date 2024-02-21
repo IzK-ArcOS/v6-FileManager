@@ -11,11 +11,7 @@
   }
 </script>
 
-<button
-  class="folder"
-  on:click={goHere}
-  class:selected={folder.path === current}
->
+<button class="folder" on:click={goHere} class:selected={folder.path === current}>
   <img src={folder.icon} alt="" class="icon" />
   <span>{folder.name}</span>
 </button>

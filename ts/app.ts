@@ -10,7 +10,7 @@ export const FileManager: App = {
     description: "Manage your ArcFS files",
     author: "The ArcOS Team",
     version: "2.0.0",
-    icon: FileManagerIcon
+    icon: FileManagerIcon,
   },
   runtime: Runtime,
   content: AppSvelte,
@@ -24,7 +24,7 @@ export const FileManager: App = {
     maximized: false,
     headless: true,
     fullscreen: false,
-    resizable: true
+    resizable: true,
   },
   controls: {
     minimize: true,
@@ -37,12 +37,12 @@ export const FileManager: App = {
     "ctrl+a": "Select all items in the folder",
     "alt+up": "Go to the parent directory",
     "alt+r": "Reload the directory",
-    "f2": "Rename the item (if there's only one selected)",
-    "enter": "Open file or navigate to folder",
+    f2: "Rename the item (if there's only one selected)",
+    enter: "Open file or navigate to folder",
     "shift+enter": "Launch Open With menu for a file, or open a folder in a new window",
-    "esc": "Clear the current selection",
-    "del": "Delete the currently selected items",
-    "up": "Move selection up using the keyboard",
-    "down": "Move selection down using the keyboard",
-  }
-}
+    esc: "Clear the current selection",
+    del: "Delete the currently selected items",
+    up: "Move selection up using the keyboard",
+    down: "Move selection down using the keyboard",
+  },
+};

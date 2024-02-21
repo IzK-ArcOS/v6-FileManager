@@ -46,15 +46,9 @@
     {/if}
   </p>
   <div class="view-modes">
-    <button
-      class="material-icons-round"
-      class:suggested={!grid}
-      on:click={gridOff}>format_list_bulleted</button
+    <button class="material-icons-round" class:suggested={!grid} on:click={gridOff}
+      >format_list_bulleted</button
     >
-    <button
-      class="material-icons-round"
-      class:suggested={grid}
-      on:click={gridOn}>grid_on</button
-    >
+    <button class="material-icons-round" class:suggested={grid} on:click={gridOn}>grid_on</button>
   </div>
 </div>

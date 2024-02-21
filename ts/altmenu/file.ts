@@ -15,15 +15,15 @@ export function FileMenu(runtime: Runtime): ContextMenuItem {
         caption: "New Window",
         icon: "add",
         action() {
-          spawnApp("FileManager", 0, [runtime.path.get()])
-        }
+          spawnApp("FileManager", 0, [runtime.path.get()]);
+        },
       },
       {
         caption: "Refresh",
         icon: "refresh",
         async action() {
-          await runtime.refresh()
-        }
+          await runtime.refresh();
+        },
       },
       SEP_ITEM,
       {
@@ -31,7 +31,7 @@ export function FileMenu(runtime: Runtime): ContextMenuItem {
         icon: "upload",
         async action() {
           directUploadProgressy(runtime.path.get(), true, runtime.pid);
-        }
+        },
       },
       {
         caption: "Download",
@@ -41,16 +41,16 @@ export function FileMenu(runtime: Runtime): ContextMenuItem {
           const file = await readFile(runtime.selected.get()[0]);
 
           DownloadFile(file);
-        }
+        },
       },
       SEP_ITEM,
       {
         caption: "Exit",
         image: ShutdownIcon,
         action() {
-          runtime.closeApp()
-        }
-      }
+          runtime.closeApp();
+        },
+      },
     ],
-  }
+  };
 }

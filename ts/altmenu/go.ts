@@ -4,7 +4,6 @@ import { Runtime } from "../runtime";
 import { SystemFolders } from "../store";
 
 export function GoMenu(runtime: Runtime): ContextMenuItem {
-
   const folderItems: ContextMenuItem[] = [];
 
   for (const folder of SystemFolders) {
@@ -12,9 +11,9 @@ export function GoMenu(runtime: Runtime): ContextMenuItem {
       caption: folder.name,
       image: folder.icon,
       async action() {
-        await runtime.navigate(folder.path)
-      }
-    })
+        await runtime.navigate(folder.path);
+      },
+    });
   }
 
   return {
@@ -24,12 +23,11 @@ export function GoMenu(runtime: Runtime): ContextMenuItem {
         caption: "Parent Folder",
         icon: "arrow_upward",
         async action() {
-          await runtime.parentDir()
+          await runtime.parentDir();
         },
       },
       SEP_ITEM,
-      ...folderItems
-    ]
-  }
-
+      ...folderItems,
+    ],
+  };
 }

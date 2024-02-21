@@ -20,16 +20,16 @@ export function EditMenu(runtime: Runtime): ContextMenuItem {
         icon: "content_cut",
         disabled: () => !runtime.selected.get().length,
         async action() {
-          runtime.setCutFiles()
-        }
+          runtime.setCutFiles();
+        },
       },
       {
         caption: "Copy",
         icon: "content_copy",
         disabled: () => !runtime.selected.get().length,
         async action() {
-          runtime.setCopyFiles()
-        }
+          runtime.setCopyFiles();
+        },
       },
       {
         caption: "Paste",
@@ -37,7 +37,7 @@ export function EditMenu(runtime: Runtime): ContextMenuItem {
         disabled: () => !runtime.copyList.get().length && !runtime.cutList.get().length,
         async action() {
           await runtime.pasteFiles();
-        }
+        },
       },
       SEP_ITEM,
       {
@@ -46,7 +46,7 @@ export function EditMenu(runtime: Runtime): ContextMenuItem {
         disabled: () => !runtime.selected.get().length,
         async action() {
           await runtime.deleteSelected();
-        }
+        },
       },
       {
         caption: "Rename",
@@ -54,7 +54,7 @@ export function EditMenu(runtime: Runtime): ContextMenuItem {
         disabled: () => runtime.selected.get().length !== 1,
         async action() {
           runtime.renamer.set(runtime.selected.get()[0]);
-        }
+        },
       },
       SEP_ITEM,
       {
@@ -62,8 +62,8 @@ export function EditMenu(runtime: Runtime): ContextMenuItem {
         icon: "select_all",
         action() {
           runtime.selectAll();
-        }
-      }
-    ]
-  }
+        },
+      },
+    ],
+  };
 }

@@ -21,11 +21,7 @@
 
 <div class="portion">
   <button class="material-icons-round" on:click={upload}>upload</button>
-  <button
-    class="material-icons-round"
-    disabled={$selected.length !== 1}
-    on:click={download}
-  >
+  <button class="material-icons-round" disabled={$selected.length !== 1} on:click={download}>
     download
   </button>
 </div>

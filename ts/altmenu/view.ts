@@ -15,7 +15,7 @@ export function ViewMenu(): ContextMenuItem {
 
             return v;
           });
-        }
+        },
       },
       {
         caption: "Grid",
@@ -27,8 +27,8 @@ export function ViewMenu(): ContextMenuItem {
 
             return v;
           });
-        }
-      }
+        },
+      },
     ],
-  }
+  };
 }

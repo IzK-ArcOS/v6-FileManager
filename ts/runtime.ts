@@ -47,7 +47,7 @@ export class Runtime extends AppRuntime {
     const path = args[0] && typeof args[0] == "string" ? args[0] : "./";
     const selection = args[1] && typeof args[1] == "string" ? [args[1].replace("./", "")] : [];
 
-    this.process.accelerator.store.push(...FileManagerAccelerators(this))
+    this.process.accelerator.store.push(...FileManagerAccelerators(this));
 
     await this.createSystemFolders();
     await this.navigate(path);
@@ -70,7 +70,7 @@ export class Runtime extends AppRuntime {
 
     await this.checkNewfileRemains();
 
-    this.setWindowTitle(pathToFriendlyName(path), false)
+    this.setWindowTitle(pathToFriendlyName(path), false);
   }
 
   public async refresh() {
@@ -113,7 +113,7 @@ export class Runtime extends AppRuntime {
     if (selected.includes(path)) selected.splice(selected.indexOf(path), 1);
     else selected.push(path);
 
-    this.selected.set(selected)
+    this.selected.set(selected);
 
     return;
   }
@@ -121,16 +121,24 @@ export class Runtime extends AppRuntime {
   public FileNotFound(path = this.path.get()) {
     this.failed.set(true);
 
-    createErrorDialog({
-      title: "Location not found",
-      message: `Folder <code>${path}</code> does not exist on ArcFS.`,
-      image: ErrorIcon,
-      buttons: [{
-        caption: "Go Home", action: () => {
-          this.navigate("./")
-        }, suggested: true
-      }]
-    }, this.pid, true)
+    createErrorDialog(
+      {
+        title: "Location not found",
+        message: `Folder <code>${path}</code> does not exist on ArcFS.`,
+        image: ErrorIcon,
+        buttons: [
+          {
+            caption: "Go Home",
+            action: () => {
+              this.navigate("./");
+            },
+            suggested: true,
+          },
+        ],
+      },
+      this.pid,
+      true
+    );
   }
 
   public selectAll() {
@@ -140,8 +148,8 @@ export class Runtime extends AppRuntime {
 
     this.selected.set([
       ...contents.files.map((f) => f.scopedPath),
-      ...contents.directories.map((d) => d.scopedPath)
-    ])
+      ...contents.directories.map((d) => d.scopedPath),
+    ]);
   }
 
   public lockRefresh() {
@@ -159,13 +167,23 @@ export class Runtime extends AppRuntime {
 
     if (!selected.length) return;
 
-    const title = selected.length > 1 ? `Delete ${selected.length} ${Plural("item", selected.length)}?` : `Delete ${pathToFriendlyName(selected[0])}?`;
+    const title =
+      selected.length > 1
+        ? `Delete ${selected.length} ${Plural("item", selected.length)}?`
+        : `Delete ${pathToFriendlyName(selected[0])}?`;
 
-    const proceed = await GetConfirmation({
-      title: title,
-      message: `Are you sure you want to <b>permanently</b> delete the selected ${Plural("item", selected.length)} from your account? There's no going back!`,
-      image: TrashIcon
-    }, this.pid, true);
+    const proceed = await GetConfirmation(
+      {
+        title: title,
+        message: `Are you sure you want to <b>permanently</b> delete the selected ${Plural(
+          "item",
+          selected.length
+        )} from your account? There's no going back!`,
+        image: TrashIcon,
+      },
+      this.pid,
+      true
+    );
 
     if (!proceed) return;
 
@@ -182,15 +200,15 @@ export class Runtime extends AppRuntime {
     this.lockRefresh();
 
     const target = this.path.get();
-    await multipleFileUploadProgressy(e.dataTransfer.files, target, this.pid)
+    await multipleFileUploadProgressy(e.dataTransfer.files, target, this.pid);
 
     this.unlockRefresh();
   }
 
   private assignDispatchers() {
     GlobalDispatch.subscribe("fs-flush", async () => {
-      this.quota.set(await getFSQuota())
-      this.refresh()
+      this.quota.set(await getFSQuota());
+      this.refresh();
     });
 
     const dispatchers = FileManagerDispatches(this);
@@ -270,13 +288,13 @@ export class Runtime extends AppRuntime {
     const dir = this.contents.get();
     const paths = [
       ...dir.directories.map((a) => a.scopedPath),
-      ...dir.files.map((a) => a.scopedPath)
+      ...dir.files.map((a) => a.scopedPath),
     ];
     const index = paths.indexOf(selected);
 
-    if (!selected) this.selected.set([paths[0]])
+    if (!selected) this.selected.set([paths[0]]);
 
-    this.selected.set([paths[(index < 0 || index - 1 < 0) ? paths.length - 1 : index - 1]]);
+    this.selected.set([paths[index < 0 || index - 1 < 0 ? paths.length - 1 : index - 1]]);
   }
 
   public selectorDown() {
@@ -286,19 +304,19 @@ export class Runtime extends AppRuntime {
     const dir = this.contents.get();
     const paths = [
       ...dir.directories.map((a) => a.scopedPath),
-      ...dir.files.map((a) => a.scopedPath)
+      ...dir.files.map((a) => a.scopedPath),
     ];
     const index = paths.indexOf(selected);
 
-    if (!selected) this.selected.set([paths[0]])
+    if (!selected) this.selected.set([paths[0]]);
 
-    this.selected.set([paths[(index < 0 || index + 1 > paths.length - 1) ? 0 : index + 1]]);
+    this.selected.set([paths[index < 0 || index + 1 > paths.length - 1 ? 0 : index + 1]]);
   }
 
   public isDirectory(path: string) {
     const dir = this.contents.get();
 
-    return dir.directories.map((a) => a.scopedPath).includes(path)
+    return dir.directories.map((a) => a.scopedPath).includes(path);
   }
 
   public getFile(path: string) {
@@ -318,7 +336,7 @@ export class Runtime extends AppRuntime {
 
     if (isDir) {
       if (!alternative) await this.navigate(selected);
-      else spawnApp("FileManager", 0, [selected])
+      else spawnApp("FileManager", 0, [selected]);
 
       return;
     }
@@ -327,8 +345,8 @@ export class Runtime extends AppRuntime {
 
     if (!file) return;
 
-    if (alternative) OpenWith(file, this.pid, true)
-    else await OpenFile(file)
+    if (alternative) OpenWith(file, this.pid, true);
+    else await OpenFile(file);
   }
 
   public async checkNewfileRemains() {

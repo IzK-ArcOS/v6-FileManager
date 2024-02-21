@@ -15,7 +15,7 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
         if (runtime.renamer.get()) return;
 
         runtime.selectAll();
-      }
+      },
     },
     {
       key: "escape",
@@ -25,14 +25,14 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
         if (!renamer) return runtime.selected.set([]);
 
         runtime.renamer.set("");
-      }
+      },
     },
     {
       alt: true,
       key: "arrowup",
       action() {
         runtime.parentDir();
-      }
+      },
     },
     {
       key: "delete",
@@ -40,14 +40,14 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
         if (runtime.renamer.get()) return;
 
         runtime.deleteSelected();
-      }
+      },
     },
     {
       key: "r",
       alt: true,
       action() {
         runtime.refresh();
-      }
+      },
     },
     {
       key: "f2",
@@ -59,7 +59,7 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
         if (selected.length !== 1) return;
 
         runtime.renamer.set(selected[0]);
-      }
+      },
     },
     {
       key: "arrowdown",
@@ -67,7 +67,7 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
         if (runtime.renamer.get()) return;
 
         runtime.selectorDown();
-      }
+      },
     },
     {
       key: "arrowup",
@@ -75,7 +75,7 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
         if (runtime.renamer.get()) return;
 
         runtime.selectorUp();
-      }
+      },
     },
     {
       key: "enter",
@@ -83,16 +83,16 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
       action() {
         if (runtime.renamer.get()) return;
 
-        runtime.EnterKey(true)
-      }
+        runtime.EnterKey(true);
+      },
     },
     {
       key: "enter",
       action() {
         if (runtime.renamer.get()) return;
 
-        runtime.EnterKey()
-      }
-    }
-  ]
+        runtime.EnterKey();
+      },
+    },
+  ];
 }

@@ -1,4 +1,10 @@
-import { ArcTermFolderIcon, DocumentsFolderIcon, FolderIcon, ThemeFolderIcon, WallpapersFolderIcon } from "$ts/images/filesystem";
+import {
+  ArcTermFolderIcon,
+  DocumentsFolderIcon,
+  FolderIcon,
+  ThemeFolderIcon,
+  WallpapersFolderIcon,
+} from "$ts/images/filesystem";
 import { HomeIcon } from "$ts/images/general";
 import { pathToFriendlyPath } from "$ts/server/fs/util";
 import { Runtime } from "./runtime";
@@ -8,7 +14,7 @@ export const SystemFolders: SystemFolder[] = [
   {
     name: "Home",
     path: "./",
-    icon: HomeIcon
+    icon: HomeIcon,
   },
   {
     name: "Documents",
@@ -18,12 +24,12 @@ export const SystemFolders: SystemFolder[] = [
   {
     name: "Pictures",
     path: "./Pictures",
-    icon: WallpapersFolderIcon
+    icon: WallpapersFolderIcon,
   },
   {
     name: "Scripts",
     path: "./Scripts",
-    icon: ArcTermFolderIcon
+    icon: ArcTermFolderIcon,
   },
   {
     name: "Themes",
@@ -34,14 +40,16 @@ export const SystemFolders: SystemFolder[] = [
     name: "Wallpapers",
     path: "./Wallpapers",
     icon: FolderIcon,
-  }
+  },
 ];
 
 export function FileManagerDispatches(runtime: Runtime): Record<string, (...data: any[]) => void> {
   return {
-    "refresh": () => runtime.refresh(),
+    refresh: () => runtime.refresh(),
     "new-folder": () => runtime.newFolder.set(true),
-    "change-dir": (data) => { if (typeof data === "string") runtime.navigate(data) },
+    "change-dir": (data) => {
+      if (typeof data === "string") runtime.navigate(data);
+    },
     "context-copy": (data) => runtime.setCopyFiles(data ? [data] : null),
     "context-cut": (data) => runtime.setCutFiles(data ? [data] : null),
     "context-paste": () => runtime.pasteFiles(),
@@ -50,8 +58,8 @@ export function FileManagerDispatches(runtime: Runtime): Record<string, (...data
 
       await runtime.deleteSelected();
     },
-    "context-rename": (data) => runtime.renamer.set(data)
-  }
+    "context-rename": (data) => runtime.renamer.set(data),
+  };
 }
 
 export function GetSystemFolderIcon(path: string) {
@@ -61,5 +69,5 @@ export function GetSystemFolderIcon(path: string) {
 
   if (!folders.length) return FolderIcon;
 
-  return folders[0].icon
+  return folders[0].icon;
 }
