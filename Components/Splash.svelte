@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import Spinner from "$lib/Components/Spinner.svelte";
   import { FileManagerIcon } from "$ts/images/apps";
 </script>

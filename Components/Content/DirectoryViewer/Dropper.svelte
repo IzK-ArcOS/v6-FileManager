@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { UploadIcon } from "$ts/images/general";
 </script>
 

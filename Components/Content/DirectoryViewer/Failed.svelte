@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { ErrorIcon } from "$ts/images/dialog";
 </script>
 
