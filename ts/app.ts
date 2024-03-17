@@ -12,6 +12,7 @@ export const FileManager: App = {
     author: "The ArcOS Team",
     version: "2.0.0",
     icon: FileManagerIcon,
+    dependendsOn: ["FsProgress", "OpenWith"],
   },
   runtime: Runtime,
   content: AppSvelte,
