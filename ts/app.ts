@@ -1,5 +1,6 @@
 import { SafeMode } from "$state/Desktop/ts/store";
 import { FileManagerIcon } from "$ts/images/apps";
+import { HelpArticles } from "$ts/stores/articles";
 import { App } from "$types/app";
 import AppSvelte from "../App.svelte";
 import { FileManagerContextMenus } from "./context";
@@ -48,4 +49,5 @@ export const FileManager: App = {
     down: "Move selection down using the keyboard",
   },
   loadCondition: () => !SafeMode.get(),
+  helpArticle: HelpArticles.fileManager,
 };
