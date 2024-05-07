@@ -1,6 +1,6 @@
 import { spawnApp } from "$ts/apps";
 import { AppRuntime } from "$ts/apps/runtime";
-import { ErrorIcon } from "$ts/images/dialog";
+import { ErrorIcon, WarningIcon } from "$ts/images/dialog";
 import { TrashIcon } from "$ts/images/general";
 import { Process } from "$ts/process";
 import { GlobalDispatch } from "$ts/process/dispatch/global";
@@ -326,27 +326,61 @@ export class Runtime extends AppRuntime {
   }
 
   public async EnterKey(alternative = false) {
-    this.singlefySelected();
+    // this.singlefySelected();
 
-    const selected = this.selected.get()[0];
+    const paths = this.selected.get();
 
-    if (!selected) return;
-
-    const isDir = this.isDirectory(selected);
-
-    if (isDir) {
-      if (!alternative) await this.navigate(selected);
-      else spawnApp("FileManager", 0, [selected]);
+    if (alternative && paths.length > 1) {
+      createErrorDialog(
+        {
+          title: "Can't do that",
+          message:
+            "It is not possible to use <code>Shift</code>+<code>Enter</code> on multiple items. Please select a single item, or press <code>Enter</code> without <code>Shift</code>.",
+          image: ErrorIcon,
+          buttons: [{ caption: "Okay", action() {}, suggested: true }],
+        },
+        this.pid,
+        true
+      );
 
       return;
     }
 
-    const file = this.getFile(selected);
+    if (paths.length > 1) {
+      const continueOperation = await GetConfirmation(
+        {
+          title: "Hold up!",
+          message:
+            "You're about to open multiple items at the same time. This could cause unexpected behaviour, depending on the number of files. Continue?",
+          image: WarningIcon,
+          sound: "arcos.dialog.warning",
+        },
+        this.pid,
+        true
+      );
 
-    if (!file) return;
+      if (!continueOperation) return;
+    }
 
-    if (alternative) OpenWith(file, this.pid, true);
-    else await OpenFile(file);
+    for (const path of paths) {
+      if (!path) continue;
+
+      const isDir = this.isDirectory(path);
+
+      if (isDir) {
+        if (!alternative) await this.navigate(path);
+        else await spawnApp("FileManager", 0, [path]);
+
+        continue;
+      }
+
+      const file = this.getFile(path);
+
+      if (!file) continue;
+
+      if (alternative) await OpenWith(file, this.pid, true);
+      else await OpenFile(file);
+    }
   }
 
   public async checkNewfileRemains() {
