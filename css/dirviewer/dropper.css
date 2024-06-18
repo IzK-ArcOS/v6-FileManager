@@ -6,7 +6,7 @@
   height: 100%;
   margin: 0;
   background-color: var(--win-bg);
-  border-radius: 10px;
+  border-radius: var(--win-border-rad);
   color: var(--fg);
 
   display: flex;

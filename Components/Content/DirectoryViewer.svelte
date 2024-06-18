@@ -44,10 +44,14 @@
   <Header />
   {#if $contents}
     {#each $contents.directories as dir}
-      <FolderItem {dir} {runtime} />
+      {#if dir.hidden ? $UserDataStore.sh.showHiddenFiles : true}
+        <FolderItem {dir} {runtime} />
+      {/if}
     {/each}
     {#each $contents.files as file}
-      <FileItem {file} {runtime} />
+      {#if file.hidden ? $UserDataStore.sh.showHiddenFiles : true}
+        <FileItem {file} {runtime} />
+      {/if}
     {/each}
     <!---->
     {#if !$contents.files.length && !$contents.directories.length}

@@ -6,6 +6,7 @@ import {
   WallpapersFolderIcon,
 } from "$ts/images/filesystem";
 import { HomeIcon } from "$ts/images/general";
+import { directUploadProgressy } from "$ts/server/fs/upload/progress";
 import { pathToFriendlyPath } from "$ts/server/fs/util";
 import { Runtime } from "./runtime";
 import { SystemFolder } from "./types";
@@ -59,6 +60,14 @@ export function FileManagerDispatches(runtime: Runtime): Record<string, (...data
       await runtime.deleteSelected();
     },
     "context-rename": (data) => runtime.renamer.set(data),
+    "upload-file": (path) => {
+      if (runtime.isVirtual()) return;
+
+      directUploadProgressy(path, true, runtime.pid);
+    },
+    "create-empty-file": (path) => {
+      runtime.createEmptyFile(path);
+    },
   };
 }
 

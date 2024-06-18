@@ -9,12 +9,13 @@ import { copyMultipleProgressy, renameMultipleProgressy } from "$ts/server/fs/co
 import { deleteItem } from "$ts/server/fs/delete";
 import { deleteMultipleProgressy } from "$ts/server/fs/delete/progress";
 import { createDirectory, getParentDirectory, readDirectory } from "$ts/server/fs/dir";
+import { writeFile } from "$ts/server/fs/file";
 import { OpenFile, OpenWith } from "$ts/server/fs/file/handler";
 import { getFSQuota } from "$ts/server/fs/quota";
 import { multipleFileUploadProgressy } from "$ts/server/fs/upload/progress";
-import { pathToFriendlyName } from "$ts/server/fs/util";
+import { pathToFriendlyName, pathToFriendlyPath } from "$ts/server/fs/util";
 import { defaultQuota } from "$ts/stores/quota";
-import { Plural } from "$ts/util";
+import { Plural, sleep } from "$ts/util";
 import { Store } from "$ts/writable";
 import type { App, AppMutator } from "$types/app";
 import { FSQuota, UserDirectory } from "$types/fs";
@@ -40,6 +41,10 @@ export class Runtime extends AppRuntime {
     super(app, mutator, process);
 
     this._init();
+
+    this.newFolder.subscribe(() => {
+      if (this.isVirtual()) this.newFolder.set(false);
+    });
   }
 
   private async _init() {
@@ -105,6 +110,12 @@ export class Runtime extends AppRuntime {
     return await this.navigate(parent);
   }
 
+  public isVirtual() {
+    const contents = this.contents.get();
+
+    return contents && contents.virtual;
+  }
+
   public updateSelection(e: MouseEvent, path: string) {
     if (!e.shiftKey) return this.selected.set([path]);
 
@@ -163,6 +174,8 @@ export class Runtime extends AppRuntime {
   }
 
   public async deleteSelected() {
+    if (this.isVirtual()) return;
+
     const selected = this.selected.get();
 
     if (!selected.length) return;
@@ -196,6 +209,8 @@ export class Runtime extends AppRuntime {
 
   public async dropFiles(e: DragEvent) {
     e.preventDefault();
+
+    if (this.isVirtual()) return;
 
     this.lockRefresh();
 
@@ -237,16 +252,22 @@ export class Runtime extends AppRuntime {
   }
 
   public setCopyFiles(files = this.selected.get()) {
+    if (this.isVirtual()) return;
+
     this.copyList.set(files);
     this.cutList.set([]);
   }
 
   public setCutFiles(files = this.selected.get()) {
+    if (this.isVirtual()) return;
+
     this.cutList.set(files);
     this.copyList.set([]);
   }
 
   public async pasteFiles(target = this.path.get()) {
+    if (this.isVirtual()) return;
+
     const copyList = this.copyList.get();
     const cutList = this.cutList.get();
     const copyObj = {};
@@ -404,5 +425,19 @@ export class Runtime extends AppRuntime {
 
       GlobalDispatch.dispatch("fs-flush");
     }
+  }
+
+  public async createEmptyFile(path: string) {
+    if (this.isVirtual()) return;
+
+    const id = Math.floor(Math.random() * 1e3);
+    const blob = new Blob();
+    const filename = `${path}/$new${id}.$new`.replaceAll("//", "/");
+
+    this.renamer.set(pathToFriendlyPath(filename));
+
+    await writeFile(filename, blob);
+
+    await sleep(100);
   }
 }

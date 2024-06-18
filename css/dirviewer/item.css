@@ -10,8 +10,32 @@
   transition: opacity 0.3s;
 }
 
+#FileManager div.directory-viewer button.hidden-file {
+  opacity: 0.6;
+}
+
+#FileManager div.directory-viewer button.virtual {
+  color: var(--clr-blue-fg);
+}
+
 #FileManager div.directory-viewer button * {
   transition: none !important;
+}
+
+#FileManager div.directory-viewer button div.segment {
+  position: relative;
+}
+
+#FileManager div.directory-viewer button.virtual div.icon::before {
+  content: "north_east";
+  font-family: "Material Icons Round";
+  color: var(--win-bg);
+  background-color: var(--fg);
+  position: absolute;
+  bottom: -2px;
+  left: -2px;
+  font-size: 10px;
+  border-radius: 2px;
 }
 
 #FileManager div.directory-viewer button.selected {

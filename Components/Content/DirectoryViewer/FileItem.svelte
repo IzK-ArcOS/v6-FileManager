@@ -55,6 +55,8 @@
   class:cutting={$cutList.includes(file.scopedPath)}
   class:copying={$copyList.includes(file.scopedPath)}
   class:selected={$selected.includes(file.scopedPath)}
+  class:virtual={file.virtual}
+  class:hidden-file={file.hidden}
   data-contextmenu="dirviewer-file"
   data-path={file.scopedPath}
   class:renaming={file.scopedPath == $renamer}

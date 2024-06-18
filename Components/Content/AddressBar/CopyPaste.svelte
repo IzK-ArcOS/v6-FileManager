@@ -3,7 +3,7 @@
 
   export let runtime: Runtime;
 
-  const { copyList, cutList, selected } = runtime;
+  const { copyList, cutList, selected, contents } = runtime;
 
   function cut() {
     runtime.setCutFiles();
@@ -22,7 +22,7 @@
   <button
     class="material-icons-round"
     on:click={cut}
-    disabled={!$selected.length}
+    disabled={!$selected.length || ($contents && $contents.virtual)}
     class:suggested={$cutList.length}
     title="Cut items"
   >
@@ -31,7 +31,7 @@
   <button
     class="material-icons-round"
     on:click={copy}
-    disabled={!$selected.length}
+    disabled={!$selected.length || ($contents && $contents.virtual)}
     class:suggested={$copyList.length}
     title="Copy items"
   >
@@ -40,7 +40,7 @@
   <button
     class="material-icons-round"
     on:click={paste}
-    disabled={!$copyList.length && !$cutList.length}
+    disabled={(!$copyList.length && !$cutList.length) || ($contents && $contents.virtual)}
     title="Paste items"
   >
     content_paste

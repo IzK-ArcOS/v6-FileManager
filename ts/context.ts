@@ -1,14 +1,11 @@
 import { SEP_ITEM } from "$state/Desktop/ts/store";
 import { FileIcon, FolderIcon } from "$ts/images/filesystem";
 import { TrashIcon, UploadIcon } from "$ts/images/general";
-import { getPartialFile, writeFile } from "$ts/server/fs/file";
+import { getPartialFile } from "$ts/server/fs/file";
 import { OpenWith } from "$ts/server/fs/file/handler";
-import { directUploadProgressy } from "$ts/server/fs/upload/progress";
-import { pathToFriendlyPath } from "$ts/server/fs/util";
 import { FileHandlers } from "$ts/stores/filesystem/handlers";
 import { ProcessStack } from "$ts/stores/process";
 import { UserDataStore } from "$ts/stores/user";
-import { sleep } from "$ts/util";
 import { AppContextMenu, ContextMenuItem } from "$types/app";
 
 function compileOpenWithMenu(): ContextMenuItem {
@@ -114,6 +111,18 @@ export const FileManagerContextMenus: AppContextMenu = {
             });
           },
         },
+        {
+          caption: "Show hidden files",
+          icon: "hide_source",
+          isActive: () => UserDataStore.get().sh.showHiddenFiles,
+          action() {
+            UserDataStore.update((v) => {
+              v.sh.showHiddenFiles = !v.sh.showHiddenFiles;
+
+              return v;
+            });
+          },
+        },
       ],
     },
     {
@@ -160,19 +169,7 @@ export const FileManagerContextMenus: AppContextMenu = {
           caption: "Empty file",
           image: FileIcon,
           async action(window, data) {
-            const id = Math.floor(Math.random() * 1e3);
-            const blob = new Blob();
-            const filename = `${data.path}/$new${id}.$new`.replaceAll("//", "/");
-
-            ProcessStack.dispatch.dispatchToPid(
-              window.pid,
-              "context-rename",
-              pathToFriendlyPath(filename)
-            );
-
-            await writeFile(filename, blob);
-
-            await sleep(100);
+            ProcessStack.dispatch.dispatchToPid(window.pid, "create-empty-file", data.path);
           },
         },
         {
@@ -187,7 +184,7 @@ export const FileManagerContextMenus: AppContextMenu = {
           caption: "Upload",
           image: UploadIcon,
           action(window, data) {
-            directUploadProgressy(data.path, true, window.pid);
+            ProcessStack.dispatch.dispatchToPid(window.pid, "upload-file", data.path);
           },
         },
       ],

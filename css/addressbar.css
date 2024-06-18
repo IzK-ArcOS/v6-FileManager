@@ -16,7 +16,7 @@
   flex-grow: 1;
   max-width: calc(100% - 35px);
   background-color: var(--button-bg);
-  border-radius: 6px;
+  border-radius: var(--button-border-rad);
   line-height: 30px;
   padding: 0 10px;
   overflow: hidden;

@@ -6,7 +6,7 @@
 
   export let runtime: Runtime;
 
-  const { selected, path } = runtime;
+  const { selected, path, contents } = runtime;
 
   async function download() {
     const file = await readFile($selected[0]);
@@ -20,8 +20,14 @@
 </script>
 
 <div class="portion">
-  <button class="material-icons-round" on:click={upload}>upload</button>
-  <button class="material-icons-round" disabled={$selected.length !== 1} on:click={download}>
+  <button class="material-icons-round" disabled={$contents && $contents.virtual} on:click={upload}
+    >upload</button
+  >
+  <button
+    class="material-icons-round"
+    disabled={$selected.length !== 1 || ($contents && $contents.virtual)}
+    on:click={download}
+  >
     download
   </button>
 </div>

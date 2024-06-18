@@ -47,6 +47,11 @@
   height: 32px;
 }
 
+#FileManager div.directory-viewer.grid button div.segment.icon::before {
+  bottom: 0;
+  left: 8px;
+}
+
 #FileManager div.directory-viewer.grid button div.segment:not(.name):not(.icon) {
   display: none;
 }
