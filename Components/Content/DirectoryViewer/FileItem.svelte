@@ -63,7 +63,7 @@
   class:renaming={file.scopedPath == $renamer}
 >
   <div class="segment icon">
-    <img src={icon} alt="" />
+    <img src={file.icon || icon} alt="" />
   </div>
   <Renamer itempath={file.scopedPath} name={file.filename} {runtime} />
   <div class="segment type">{file.system ? `System File` : mime}</div>

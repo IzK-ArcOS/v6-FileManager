@@ -70,6 +70,7 @@ export class Runtime extends AppRuntime {
     if (cwd == path) return;
 
     this.path.set(path);
+    this.selected.set([]);
 
     await this.refresh();
 
