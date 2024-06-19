@@ -56,6 +56,7 @@
   class:copying={$copyList.includes(file.scopedPath)}
   class:selected={$selected.includes(file.scopedPath)}
   class:virtual={file.virtual}
+  class:system={file.system}
   class:hidden-file={file.hidden}
   data-contextmenu="dirviewer-file"
   data-path={file.scopedPath}
@@ -65,7 +66,7 @@
     <img src={icon} alt="" />
   </div>
   <Renamer itempath={file.scopedPath} name={file.filename} {runtime} />
-  <div class="segment type">{mime}</div>
+  <div class="segment type">{file.system ? `System File` : mime}</div>
   <div class="segment size">{formatBytes(file.size)}</div>
   <div class="segment modified">{date}</div>
 </button>

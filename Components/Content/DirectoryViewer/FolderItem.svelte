@@ -37,6 +37,7 @@
   class:selected={$selected.includes(dir.scopedPath)}
   class:renaming={dir.scopedPath == $renamer}
   class:virtual={dir.virtual}
+  class:system={dir.system}
   class:hidden-file={dir.hidden}
   on:dblclick={goHere}
 >

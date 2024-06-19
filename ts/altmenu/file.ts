@@ -3,7 +3,7 @@ import { spawnApp } from "$ts/apps";
 import { ShutdownIcon } from "$ts/images/power";
 import { DownloadFile } from "$ts/server/fs/download";
 import { readFile } from "$ts/server/fs/file";
-import { directUploadProgressy } from "$ts/server/fs/upload/progress";
+import { ProcessStack } from "$ts/stores/process";
 import { ContextMenuItem } from "$types/app";
 import { Runtime } from "../runtime";
 
@@ -27,10 +27,10 @@ export function FileMenu(runtime: Runtime): ContextMenuItem {
       },
       SEP_ITEM,
       {
-        caption: "Upload...",
+        caption: "Upload",
         icon: "upload",
-        async action() {
-          directUploadProgressy(runtime.path.get(), true, runtime.pid);
+        action(window, data) {
+          ProcessStack.dispatch.dispatchToPid(runtime.pid, "upload-file", data.path);
         },
       },
       {

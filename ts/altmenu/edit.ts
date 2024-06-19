@@ -1,5 +1,7 @@
 import { SEP_ITEM } from "$state/Desktop/ts/store";
+import { FolderIcon } from "$ts/images/filesystem";
 import { TrashIcon } from "$ts/images/general";
+import { ProcessStack } from "$ts/stores/process";
 import { ContextMenuItem } from "$types/app";
 import { Runtime } from "../runtime";
 
@@ -8,52 +10,47 @@ export function EditMenu(runtime: Runtime): ContextMenuItem {
     caption: "Edit",
     subItems: [
       {
-        caption: "New Folder",
-        icon: "create_new_folder",
-        action() {
-          runtime.newFolder.set(true);
+        caption: "Create Folder",
+        image: FolderIcon,
+        action(window) {
+          ProcessStack.dispatch.dispatchToPid(runtime.pid, "new-folder");
         },
       },
       SEP_ITEM,
       {
         caption: "Cut",
         icon: "content_cut",
-        disabled: () => !runtime.selected.get().length,
-        async action() {
-          runtime.setCutFiles();
+        async action(window, data) {
+          ProcessStack.dispatch.dispatchToPid(runtime.pid, "context-cut", data.path);
         },
       },
       {
         caption: "Copy",
         icon: "content_copy",
-        disabled: () => !runtime.selected.get().length,
-        async action() {
-          runtime.setCopyFiles();
+        async action(window, data) {
+          ProcessStack.dispatch.dispatchToPid(runtime.pid, "context-copy", data.path);
         },
       },
       {
         caption: "Paste",
         icon: "content_paste",
-        disabled: () => !runtime.copyList.get().length && !runtime.cutList.get().length,
-        async action() {
-          await runtime.pasteFiles();
+        async action(window) {
+          ProcessStack.dispatch.dispatchToPid(runtime.pid, "context-paste");
         },
       },
       SEP_ITEM,
       {
         caption: "Delete",
         image: TrashIcon,
-        disabled: () => !runtime.selected.get().length,
-        async action() {
-          await runtime.deleteSelected();
+        async action(window, data) {
+          ProcessStack.dispatch.dispatchToPid(runtime.pid, "context-delete", data.path);
         },
       },
       {
         caption: "Rename",
         icon: "mode_edit",
-        disabled: () => runtime.selected.get().length !== 1,
-        async action() {
-          runtime.renamer.set(runtime.selected.get()[0]);
+        async action(window, data) {
+          ProcessStack.dispatch.dispatchToPid(runtime.pid, "context-rename", data.path);
         },
       },
       SEP_ITEM,

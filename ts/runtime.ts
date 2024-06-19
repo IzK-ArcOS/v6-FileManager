@@ -87,9 +87,11 @@ export class Runtime extends AppRuntime {
 
     const contents = await readDirectory(this.path.get());
 
+    console.log(`fm`, contents);
+
     this.loading.set(false);
 
-    if (!contents) {
+    if (!contents || !contents.scopedPath) {
       this.FileNotFound();
 
       return false;
@@ -135,7 +137,7 @@ export class Runtime extends AppRuntime {
     createErrorDialog(
       {
         title: "Location not found",
-        message: `Folder <code>${path}</code> does not exist on ArcFS.`,
+        message: `Folder <code>${path}</code> does not exist on ArcOS.`,
         image: ErrorIcon,
         buttons: [
           {

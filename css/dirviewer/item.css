@@ -26,8 +26,8 @@
   position: relative;
 }
 
-#FileManager div.directory-viewer button.virtual div.icon::before {
-  content: "north_east";
+#FileManager div.directory-viewer button.virtual div.icon::before,
+#FileManager div.directory-viewer button.system div.icon::before {
   font-family: "Material Icons Round";
   color: var(--win-bg);
   background-color: var(--fg);
@@ -36,6 +36,14 @@
   left: -2px;
   font-size: 10px;
   border-radius: 2px;
+}
+
+#FileManager div.directory-viewer button.virtual div.icon::before {
+  content: "north_east";
+}
+
+#FileManager div.directory-viewer button.system div.icon::before {
+  content: "settings";
 }
 
 #FileManager div.directory-viewer button.selected {
