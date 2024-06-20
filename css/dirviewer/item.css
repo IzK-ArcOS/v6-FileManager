@@ -14,10 +14,6 @@
   opacity: 0.6;
 }
 
-#FileManager div.directory-viewer button.virtual {
-  color: var(--clr-blue-fg);
-}
-
 #FileManager div.directory-viewer button * {
   transition: none !important;
 }
