@@ -43,7 +43,7 @@ export function EditMenu(runtime: Runtime): ContextMenuItem {
         caption: "Delete",
         image: TrashIcon,
         async action(window, data) {
-          ProcessStack.dispatch.dispatchToPid(runtime.pid, "context-delete", data.path);
+          ProcessStack.dispatch.dispatchToPid(runtime.pid, "context-delete");
         },
       },
       {

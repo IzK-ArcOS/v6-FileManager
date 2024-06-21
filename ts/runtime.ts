@@ -255,14 +255,14 @@ export class Runtime extends AppRuntime {
   public setCopyFiles(files = this.selected.get()) {
     if (this.isVirtual()) return;
 
-    this.copyList.set(files);
+    this.copyList.set(files || []);
     this.cutList.set([]);
   }
 
   public setCutFiles(files = this.selected.get()) {
     if (this.isVirtual()) return;
 
-    this.cutList.set(files);
+    this.cutList.set(files || []);
     this.copyList.set([]);
   }
 

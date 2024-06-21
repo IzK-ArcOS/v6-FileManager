@@ -55,7 +55,7 @@ export function FileManagerDispatches(runtime: Runtime): Record<string, (...data
     "context-cut": (data) => runtime.setCutFiles(data ? [data] : null),
     "context-paste": () => runtime.pasteFiles(),
     "context-delete": async (data) => {
-      runtime.selected.set([data]);
+      if (data) runtime.selected.set([data]);
 
       await runtime.deleteSelected();
     },
