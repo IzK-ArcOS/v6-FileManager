@@ -88,8 +88,6 @@ export class Runtime extends AppRuntime {
 
     const contents = await readDirectory(this.path.get());
 
-    console.log(`fm`, contents);
-
     this.loading.set(false);
 
     if (!contents || !contents.scopedPath) {
