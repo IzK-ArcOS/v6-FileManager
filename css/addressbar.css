@@ -5,6 +5,7 @@
   margin: 5px 15px;
   margin-bottom: 0;
   align-items: center;
+  position: relative;
 }
 
 #FileManager div.address-bar div.portion.address {
@@ -22,7 +23,24 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  position: relative;
 }
+
+#FileManager div.address-bar.system div.path {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #0000 0px,
+    #0000 20px,
+    rgba(255, 166, 0, 0.1) 20px,
+    rgba(255, 166, 0, 0.1) 40px,
+    #0000 40px
+  );
+}
+/* 
+#FileManager div.address-bar.system div.path {
+  background-color: var(--clr-orange-bg);
+  color: var(--clr-orange-fg);
+} */
 
 #FileManager div.address-bar button {
   width: 30px;

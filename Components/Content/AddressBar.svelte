@@ -9,7 +9,7 @@
   const { path, newFolder, contents } = runtime;
 </script>
 
-<div class="address-bar">
+<div class="address-bar" class:system={$contents && $contents.system}>
   <div class="portion address">
     <button class="material-icons-round parent" on:click={() => runtime.parentDir()}>
       arrow_upward
