@@ -15,7 +15,10 @@
       arrow_upward
     </button>
     <div class="path">
-      {pathToFriendlyPath($path)}{$contents && $contents.virtual ? " (virtual)" : ""}
+      {pathToFriendlyPath($path, !($path && $path.startsWith("ArcOS")))}{$contents &&
+      $contents.virtual
+        ? " (virtual)"
+        : ""}
     </div>
   </div>
   <div class="sep" />
