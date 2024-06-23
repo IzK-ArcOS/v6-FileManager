@@ -1,4 +1,4 @@
-import { spawnApp } from "$ts/apps";
+import { spawnApp, spawnOverlay } from "$ts/apps";
 import { AppRuntime } from "$ts/apps/runtime";
 import { ErrorIcon, WarningIcon } from "$ts/images/dialog";
 import { TrashIcon } from "$ts/images/general";
@@ -6,26 +6,26 @@ import { Process } from "$ts/process";
 import { GlobalDispatch } from "$ts/process/dispatch/global";
 import { GetConfirmation, createErrorDialog } from "$ts/process/error";
 import { copyMultipleProgressy, renameMultipleProgressy } from "$ts/server/fs/copy/progress";
-import { deleteItem } from "$ts/server/fs/delete";
 import { deleteMultipleProgressy } from "$ts/server/fs/delete/progress";
 import { createDirectory, getParentDirectory, readDirectory } from "$ts/server/fs/dir";
-import { writeFile } from "$ts/server/fs/file";
 import { OpenFile, OpenWith } from "$ts/server/fs/file/handler";
 import { getFSQuota } from "$ts/server/fs/quota";
 import { multipleFileUploadProgressy } from "$ts/server/fs/upload/progress";
-import { pathToFriendlyName, pathToFriendlyPath } from "$ts/server/fs/util";
+import { pathToFriendlyName } from "$ts/server/fs/util";
 import { defaultQuota } from "$ts/stores/quota";
-import { Plural, sleep } from "$ts/util";
+import { UserDataStore } from "$ts/stores/user";
+import { Plural } from "$ts/util";
 import { Store } from "$ts/writable";
 import type { App, AppMutator } from "$types/app";
+import { LogLevel } from "$types/console";
 import { FSQuota, UserDirectory } from "$types/fs";
 import { FileManagerAccelerators } from "./accelerators";
 import { FileManagerAltMenu } from "./altmenu";
 import { FileManagerDispatches, SystemFolders } from "./store";
+import { FileManagerOverlays } from "./store/overlays";
 
 export class Runtime extends AppRuntime {
   public path = Store<string>();
-  public renamer = Store<string>("");
   public contents = Store<UserDirectory>();
   public selected = Store<string[]>([]);
   public cutList = Store<string[]>([]);
@@ -73,8 +73,6 @@ export class Runtime extends AppRuntime {
     this.selected.set([]);
 
     await this.refresh();
-
-    await this.checkNewfileRemains();
 
     this.setWindowTitle(pathToFriendlyName(path), false);
   }
@@ -308,15 +306,18 @@ export class Runtime extends AppRuntime {
 
     const selected = this.selected.get()[0];
     const dir = this.contents.get();
+    const showHidden = UserDataStore.get().sh.showHiddenFiles;
     const paths = [
-      ...dir.directories.map((a) => a.scopedPath),
-      ...dir.files.map((a) => a.scopedPath),
+      ...dir.directories.filter((a) => !!a.hidden == showHidden).map((a) => a.scopedPath),
+      ...dir.files.filter((a) => !!a.hidden == showHidden).map((a) => a.scopedPath),
     ];
     const index = paths.indexOf(selected);
 
     if (!selected) this.selected.set([paths[0]]);
 
-    this.selected.set([paths[index < 0 || index - 1 < 0 ? paths.length - 1 : index - 1]]);
+    const path = paths[index < 0 || index - 1 < 0 ? paths.length - 1 : index - 1];
+
+    this.selected.set([path]);
   }
 
   public selectorDown() {
@@ -324,15 +325,18 @@ export class Runtime extends AppRuntime {
 
     const selected = this.selected.get()[0];
     const dir = this.contents.get();
+    const showHidden = UserDataStore.get().sh.showHiddenFiles;
     const paths = [
-      ...dir.directories.map((a) => a.scopedPath),
-      ...dir.files.map((a) => a.scopedPath),
+      ...dir.directories.filter((a) => !!a.hidden == showHidden).map((a) => a.scopedPath),
+      ...dir.files.filter((a) => !!a.hidden == showHidden).map((a) => a.scopedPath),
     ];
     const index = paths.indexOf(selected);
 
     if (!selected) this.selected.set([paths[0]]);
 
-    this.selected.set([paths[index < 0 || index + 1 > paths.length - 1 ? 0 : index + 1]]);
+    const path = paths[index < 0 || index + 1 > paths.length - 1 ? 0 : index + 1];
+
+    this.selected.set([path]);
   }
 
   public isDirectory(path: string) {
@@ -405,40 +409,34 @@ export class Runtime extends AppRuntime {
     }
   }
 
-  public async checkNewfileRemains() {
-    const contents = this.contents.get();
-
-    if (!contents) return;
-
-    const files = contents.files.filter((a) => a.filename.includes("$new"));
-    const renamer = this.renamer.get();
-
-    let deletedAnything = false;
-
-    for (const file of files) {
-      if (renamer == file.scopedPath) continue;
-
-      deletedAnything = await deleteItem(file.scopedPath, false);
-    }
-
-    if (deletedAnything) {
-      await this.refresh();
-
-      GlobalDispatch.dispatch("fs-flush");
-    }
-  }
-
-  public async createEmptyFile(path: string) {
+  public async createEmptyFile() {
     if (this.isVirtual()) return;
 
-    const id = Math.floor(Math.random() * 1e3);
-    const blob = new Blob();
-    const filename = `${path}/$new${id}.$new`.replaceAll("//", "/");
+    this.showOverlay("EditItem", [this.path.get()]);
+  }
 
-    this.renamer.set(pathToFriendlyPath(filename));
+  public async renameItem(filename: string) {
+    if (this.isVirtual()) return;
 
-    await writeFile(filename, blob);
+    this.showOverlay("EditItem", [this.path.get(), filename]);
+  }
 
-    await sleep(100);
+  public showOverlay(id: string, args: any[] = []) {
+    this.Log(`Showing overlay ${id} (${args.length} arguments)`);
+
+    const overlay = FileManagerOverlays[id];
+
+    if (!overlay) {
+      this.Log(
+        `Can't show non-existent overlay ${id}. This is a bug.`,
+        `showOverlay`,
+        LogLevel.error
+      );
+      return false;
+    }
+
+    spawnOverlay(overlay, this.process.pid, args);
+
+    return true;
   }
 }

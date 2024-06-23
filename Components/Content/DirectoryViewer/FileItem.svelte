@@ -11,12 +11,11 @@
   import updateLocale from "dayjs/plugin/updateLocale";
   import { fromMime } from "human-filetypes";
   import { onMount } from "svelte";
-  import Renamer from "./Item/Renamer.svelte";
 
   export let runtime: Runtime;
   export let file: PartialArcFile;
 
-  const { cutList, copyList, renamer, selected } = runtime;
+  const { cutList, copyList, selected } = runtime;
 
   let date = "";
   let mime = "";
@@ -42,8 +41,6 @@
   }
 
   function open() {
-    if ($renamer == file.scopedPath) return;
-
     OpenFile(file, runtime.pid);
   }
 </script>
@@ -60,12 +57,12 @@
   class:hidden-file={file.hidden}
   data-contextmenu="dirviewer-file"
   data-path={file.scopedPath}
-  class:renaming={file.scopedPath == $renamer}
+  data-name={file.filename}
 >
   <div class="segment icon">
     <img src={file.icon || icon} alt="" />
   </div>
-  <Renamer itempath={file.scopedPath} name={file.filename} {runtime} />
+  <div class="segment name">{file.filename}</div>
   <div class="segment type">{file.system ? `System File` : mime}</div>
   <div class="segment size">{formatBytes(file.size)}</div>
   <div class="segment modified">{date}</div>

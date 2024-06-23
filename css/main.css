@@ -4,6 +4,8 @@
 @import url("./toolbar.css");
 @import url("./addressbar.css");
 @import url("./splash.css");
+@import url("./overlay.css");
+@import url("./overlays/edititem.css");
 
 #FileManager > div.body {
   display: flex;

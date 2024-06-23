@@ -78,7 +78,7 @@ export const FileManagerContextMenus: AppContextMenu = {
       caption: "Rename",
       icon: "mode_edit",
       async action(window, data) {
-        ProcessStack.dispatch.dispatchToPid(window.pid, "context-rename", data.path);
+        ProcessStack.dispatch.dispatchToPid(window.pid, "context-rename", data.name);
       },
     },
   ],

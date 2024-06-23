@@ -1,6 +1,7 @@
 import { SEP_ITEM } from "$state/Desktop/ts/store";
 import { FolderIcon } from "$ts/images/filesystem";
 import { TrashIcon } from "$ts/images/general";
+import { getFilenameFromPath } from "$ts/server/fs/file";
 import { ProcessStack } from "$ts/stores/process";
 import { ContextMenuItem } from "$types/app";
 import { Runtime } from "../runtime";
@@ -50,7 +51,17 @@ export function EditMenu(runtime: Runtime): ContextMenuItem {
         caption: "Rename",
         icon: "mode_edit",
         async action(window, data) {
-          ProcessStack.dispatch.dispatchToPid(runtime.pid, "context-rename", data.path);
+          runtime.singlefySelected();
+
+          const selected = runtime.selected.get();
+
+          if (!selected.length) return;
+
+          ProcessStack.dispatch.dispatchToPid(
+            runtime.pid,
+            "context-rename",
+            getFilenameFromPath(selected[0])
+          );
         },
       },
       SEP_ITEM,

@@ -1,0 +1,10 @@
+#FileManager window.overlay {
+  transform: translateX(-50%) !important;
+  top: 15px;
+  scale: 1 !important;
+  margin-top: -100px;
+}
+
+#FileManager window.overlay.visible:not(.closing) {
+  margin-top: 0;
+}

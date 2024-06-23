@@ -1,3 +1,4 @@
+import { getFilenameFromPath } from "$ts/server/fs/file";
 import { AppKeyCombinations } from "$types/accelerator";
 import { Runtime } from "./runtime";
 
@@ -12,19 +13,13 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
       ctrl: true,
       key: "a",
       action() {
-        if (runtime.renamer.get()) return;
-
         runtime.selectAll();
       },
     },
     {
       key: "escape",
       action() {
-        const renamer = runtime.renamer.get();
-
-        if (!renamer) return runtime.selected.set([]);
-
-        runtime.renamer.set("");
+        return runtime.selected.set([]);
       },
     },
     {
@@ -37,8 +32,6 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
     {
       key: "delete",
       action() {
-        if (runtime.renamer.get()) return;
-
         runtime.deleteSelected();
       },
     },
@@ -52,28 +45,22 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
     {
       key: "f2",
       action() {
-        if (runtime.renamer.get()) return;
-
         const selected = runtime.selected.get();
 
         if (selected.length !== 1) return;
 
-        runtime.renamer.set(selected[0]);
+        runtime.renameItem(getFilenameFromPath(selected[0]));
       },
     },
     {
       key: "arrowdown",
       action() {
-        if (runtime.renamer.get()) return;
-
         runtime.selectorDown();
       },
     },
     {
       key: "arrowup",
       action() {
-        if (runtime.renamer.get()) return;
-
         runtime.selectorUp();
       },
     },
@@ -81,16 +68,12 @@ export function FileManagerAccelerators(runtime: Runtime): AppKeyCombinations {
       key: "enter",
       shift: true,
       action() {
-        if (runtime.renamer.get()) return;
-
         runtime.EnterKey(true);
       },
     },
     {
       key: "enter",
       action() {
-        if (runtime.renamer.get()) return;
-
         runtime.EnterKey();
       },
     },
